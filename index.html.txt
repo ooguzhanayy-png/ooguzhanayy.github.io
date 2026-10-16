@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Sitem</title>
+</head>
+<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+    <h1>Web Sitesine Hoş Geldiniz</h1>
+    <p>Bu site GitHub Pages üzerinden yayınlanmaktadır.</p>
+</body>
+</html>
