@@ -3,17 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Oguzhanın Cenneti</title>
+    <style>
+        /* RGB Renk Değiştirme Animasyonu */
+        @keyframes rgbAnimasyonu {
+            0% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }       /* Kırmızı */
+            17% { color: #ff7f00; text-shadow: 0 0 5px rgba(255, 127, 0, 0.2); }    /* Turuncu */
+            33% { color: #ffff00; text-shadow: 0 0 5px rgba(255, 255, 0, 0.2); }    /* Sarı */
+            50% { color: #00ff00; text-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }      /* Yeşil */
+            67% { color: #0000ff; text-shadow: 0 0 5px rgba(0, 0, 255, 0.2); }      /* Mavi */
+            83% { color: #8b00ff; text-shadow: 0 0 5px rgba(139, 0, 255, 0.2); }    /* Mor */
+            100% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }     /* Tekrar Kırmızı */
+        }
+
+        /* RGB efektini uygulayacağımız sınıf */
+        .rgb-baslik {
+            font-weight: bold;
+            font-size: 20px; /* Okunabilirliği artırmak için biraz büyütüldü */
+            animation: rgbAnimasyonu 5s linear infinite; /* 5 saniyede bir renk döngüsü tamamlanır */
+            transition: transform 0.2s;
+        }
+
+        /* Üzerine gelince hafif büyüme efekti (opsiyonel ama şık durur) */
+        .rgb-baslik:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </head>
 <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px; padding-bottom: 50px;">
     <h1>Hoşgeldiniz, burada yaptığınız her harekete dikkat edin.</h1>
     <p>Bu site içerisinde türlü güzellikler sizi bekliyor, yeni içerik ve yenilikler için lütfen ooguzhanayy@gmail.com üzerinden iletişime geçiniz.</p>
 
-    <!-- Tıklanabilir başlık alanı -->
-    <details id="fotdetay" style="margin-top: 20px; cursor: pointer;" onclick="fotoyuGoster(event)">
-        <summary style="font-weight: bold; font-size: 18px;">Bu fotoğrafı görmek istediğinize emin misiniz?</summary>
-        <div style="margin-top: 10px;">
-            <img src="ayak.jpg" alt="Açıklama" style="max-width: 100%; height: auto; border-radius: 8px;">
-            <p style="margin-top: 15px; font-weight: bold; color: #333;">yani bunu sen istemiştin</p>
+    <!-- Tıklanabilir başlık alanı (margin-top 20px'den 65px'e çıkarılarak mesafe açıldı) -->
+    <details id="fotdetay" style="margin-top: 65px; cursor: pointer;" onclick="fotoyuGoster(event)">
+        <summary class="rgb-baslik" style="outline: none;">Bu fotoğrafı görmek istediğinize emin misiniz?</summary>
+        <div style="margin-top: 15px;">
+            <img src="ayak.jpg" alt="Açıklama" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+            <p style="margin-top: 15px; font-weight: bold; color: #333; font-size: 16px;">yani bunu sen istemiştin</p>
         </div>
     </details>
 
