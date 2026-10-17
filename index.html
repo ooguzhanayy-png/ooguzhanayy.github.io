@@ -6,24 +6,20 @@
     <style>
         /* RGB Renk Değiştirme Animasyonu */
         @keyframes rgbAnimasyonu {
-            0% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }       /* Kırmızı */
-            17% { color: #ff7f00; text-shadow: 0 0 5px rgba(255, 127, 0, 0.2); }    /* Turuncu */
-            33% { color: #ffff00; text-shadow: 0 0 5px rgba(255, 255, 0, 0.2); }    /* Sarı */
-            50% { color: #00ff00; text-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }      /* Yeşil */
-            67% { color: #0000ff; text-shadow: 0 0 5px rgba(0, 0, 255, 0.2); }      /* Mavi */
-            83% { color: #8b00ff; text-shadow: 0 0 5px rgba(139, 0, 255, 0.2); }    /* Mor */
-            100% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }     /* Tekrar Kırmızı */
+            0% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }       
+            17% { color: #ff7f00; text-shadow: 0 0 5px rgba(255, 127, 0, 0.2); }    
+            33% { color: #ffff00; text-shadow: 0 0 5px rgba(255, 255, 0, 0.2); }    
+            50% { color: #00ff00; text-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }      
+            67% { color: #0000ff; text-shadow: 0 0 5px rgba(0, 0, 255, 0.2); }      
+            83% { color: #8b00ff; text-shadow: 0 0 5px rgba(139, 0, 255, 0.2); }    
+            100% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }     
         }
-
-        /* RGB efektini uygulayacağımız sınıf */
         .rgb-baslik {
             font-weight: bold;
-            font-size: 20px; /* Okunabilirliği artırmak için biraz büyütüldü */
-            animation: rgbAnimasyonu 5s linear infinite; /* 5 saniyede bir renk döngüsü tamamlanır */
+            font-size: 20px; 
+            animation: rgbAnimasyonu 5s linear infinite; 
             transition: transform 0.2s;
         }
-
-        /* Üzerine gelince hafif büyüme efekti (opsiyonel ama şık durur) */
         .rgb-baslik:hover {
             transform: scale(1.02);
         }
@@ -33,7 +29,7 @@
     <h1>Hoşgeldiniz, burada yaptığınız her harekete dikkat edin.</h1>
     <p>Bu site içerisinde türlü güzellikler sizi bekliyor, yeni içerik ve yenilikler için lütfen ooguzhanayy@gmail.com üzerinden iletişime geçiniz.</p>
 
-    <!-- Tıklanabilir başlık alanı (margin-top 20px'den 65px'e çıkarılarak mesafe açıldı) -->
+    <!-- Tıklanabilir başlık alanı -->
     <details id="fotdetay" style="margin-top: 65px; cursor: pointer;" onclick="fotoyuGoster(event)">
         <summary class="rgb-baslik" style="outline: none;">Bu fotoğrafı görmek istediğinize emin misiniz?</summary>
         <div style="margin-top: 15px;">
@@ -97,6 +93,28 @@
             const data = snapshot.val();
             if (data) {
                 const yorumDizisi = Object.values(data);
+                
+                // --- TARİHE GÖRE SIRALAMA ALGORİTMASI ---
+                // Yorumları eskiden yeniye doğru sıraya dizer (1453 en başa geçer)
+                yorumDizisi.sort((a, b) => {
+                    try {
+                        const parcaA = a.tarih.split(' ');
+                        const tarihA = parcaA[0].split('.');
+                        const saatA = parcaA[1] ? parcaA[1].split(/[:.]/) : [0,0];
+                        const dateA = new Date(tarihA[2], tarihA[1]-1, tarihA[0], saatA[0], saatA[1]);
+
+                        const parcaB = b.tarih.split(' ');
+                        const tarihB = parcaB[0].split('.');
+                        const saatB = parcaB[1] ? parcaB[1].split(/[:.]/) : [0,0];
+                        const dateB = new Date(tarihB[2], tarihB[1]-1, tarihB[0], saatB[0], saatB[1]);
+
+                        return dateA - dateB;
+                    } catch (e) {
+                        return 0;
+                    }
+                });
+
+                // Sıralanmış diziyi ekrana bas (Eski olanlar alta doğru itilir)
                 yorumDizisi.forEach(yorum => {
                     ekranaYorumBas(yorum.ad, yorum.metin, yorum.tarih);
                 });
@@ -116,8 +134,13 @@
                 return;
             }
 
+            // Tarih formatını sabitle (Fatih'in formatı olan DD.MM.YYYY ile aynı olsun)
             const simdi = new Date();
-            const tarih = simdi.toLocaleDateString('tr-TR') + " " + simdi.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+            const tarih = ("0" + simdi.getDate()).slice(-2) + "." + 
+                          ("0" + (simdi.getMonth() + 1)).slice(-2) + "." + 
+                          simdi.getFullYear() + " " + 
+                          ("0" + simdi.getHours()).slice(-2) + ":" + 
+                          ("0" + simdi.getMinutes()).slice(-2);
 
             // Yorumu Firebase veritabanına gönder
             push(yorumlarRef, {
@@ -151,7 +174,7 @@
             yeniYorum.appendChild(baslik);
             yeniYorum.appendChild(icerik);
 
-            // En son yazılan yorum en üstte görünsün
+            // Her yeni gelen yorumu EN ÜSTE yerleştirir
             liste.prepend(yeniYorum);
         }
     </script>
