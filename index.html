@@ -4,16 +4,131 @@
     <meta charset="UTF-8">
     <title>Oguzhanın Cenneti</title>
 </head>
-<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
-    <h1>Hoşgeldiniz,burada yaptığınız her harekete dikkat edin.</h1>
-    <p>Bu site içerisinde türlü güzellikler sizi bekliyor,yeni içerik ve yenilikler için lütfen ooguzhanayy@gmail.com üzerinden iletişime geçiniz.</p>
+<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px; padding-bottom: 50px;">
+    <h1>Hoşgeldiniz, burada yaptığınız her harekete dikkat edin.</h1>
+    <p>Bu site içerisinde türlü güzellikler sizi bekliyor, yeni içerik ve yenilikler için lütfen ooguzhanayy@gmail.com üzerinden iletişime geçiniz.</p>
 
-    <!-- Tıklanabilir başlık ve fotoğraf alanı -->
-    <details style="margin-top: 20px; cursor: pointer;">
+    <!-- Tıklanabilir başlık alanı -->
+    <details id="fotdetay" style="margin-top: 20px; cursor: pointer;" onclick="fotoyuGoster(event)">
         <summary style="font-weight: bold; font-size: 18px;">Bu fotoğrafı görmek istediğinize emin misiniz?</summary>
         <div style="margin-top: 10px;">
-            <img src="ayak.jpg" alt="Açıklama" style="max-width: 200%; height: auto; border-radius: 8px;">
+            <img src="ayak.jpg" alt="Açıklama" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <p style="margin-top: 15px; font-weight: bold; color: #333;">yani bunu sen istemiştin</p>
         </div>
     </details>
+
+    <!-- Yorum Bölümü -->
+    <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
+    
+    <div style="max-width: 450px; margin: 30px auto; text-align: left; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3 style="text-align: center; margin-top: 0; color: #333;">Ziyaretçi Yorumları</h3>
+        
+        <input type="text" id="kullaniciAdi" placeholder="Kullanıcı Adınız" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px;">
+        
+        <textarea id="yorumMetni" placeholder="Yorumunuzu buraya yazın..." rows="3" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"></textarea>
+        
+        <button id="yorumGonderBtn" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Yorumu Gönder</button>
+
+        <!-- Yorumların Listeleneceği Alan -->
+        <div id="yorumListesi" style="margin-top: 20px;"></div>
+    </div>
+
+    <!-- Fotoğraf Onay Scripti -->
+    <script>
+        let onaylandi = false;
+        function fotoyuGoster(event) {
+            const detay = document.getElementById('fotdetay');
+            if (!onaylandi && !detay.open) {
+                event.preventDefault();
+                let karar = confirm("Tekrardan emin misin!!!!");
+                if (karar) {
+                    onaylandi = true;
+                    detay.open = true;
+                }
+            }
+        }
+    </script>
+
+    <!-- Ortak Veritabanı (Firebase) Scripti -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // Senin Firebase Veritabanı Adresin
+        const firebaseConfig = {
+            databaseURL: "https://cennetyorumlar-48e05-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+
+        // Firebase'i başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const yorumlarRef = ref(db, 'ziyaretci_yorumlari');
+
+        // Veritabanındaki yorumları anlık olarak dinle ve ekrana bas
+        onValue(yorumlarRef, (snapshot) => {
+            const liste = document.getElementById('yorumListesi');
+            liste.innerHTML = ""; // Listeyi temizle
+            
+            const data = snapshot.val();
+            if (data) {
+                const yorumDizisi = Object.values(data);
+                yorumDizisi.forEach(yorum => {
+                    ekranaYorumBas(yorum.ad, yorum.metin, yorum.tarih);
+                });
+            }
+        });
+
+        // Gönder butonuna tıklandığında çalışacak kod
+        document.getElementById('yorumGonderBtn').addEventListener('click', () => {
+            const adInput = document.getElementById('kullaniciAdi');
+            const metinInput = document.getElementById('yorumMetni');
+            
+            const ad = adInput.value.trim();
+            const metin = metinInput.value.trim();
+
+            if (ad === "" || metin === "") {
+                alert("Lütfen hem kullanıcı adını hem de yorum kısmını doldurun!");
+                return;
+            }
+
+            const simdi = new Date();
+            const tarih = simdi.toLocaleDateString('tr-TR') + " " + simdi.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+
+            // Yorumu Firebase veritabanına gönder
+            push(yorumlarRef, {
+                ad: ad,
+                metin: metin,
+                tarih: tarih
+            });
+
+            // Kutuları temizle
+            adInput.value = "";
+            metinInput.value = "";
+        });
+
+        // Yorumları görsel olarak oluşturan fonksiyon
+        function ekranaYorumBas(ad, metin, tarih) {
+            const liste = document.getElementById('yorumListesi');
+            const yeniYorum = document.createElement('div');
+            yeniYorum.style.borderBottom = "1px solid #e0e0e0";
+            yeniYorum.style.padding = "10px 0";
+            yeniYorum.style.wordWrap = "break-word";
+            
+            const baslik = document.createElement('div');
+            baslik.innerHTML = `<strong style="color: #007bff;"></strong> <span style="font-size: 11px; color: #888; float: right;">${tarih}</span>`;
+            baslik.querySelector('strong').textContent = ad;
+
+            const icerik = document.createElement('p');
+            icerik.style.margin = "5px 0 0 0";
+            icerik.style.color = "#444";
+            icerik.textContent = metin;
+
+            yeniYorum.appendChild(baslik);
+            yeniYorum.appendChild(icerik);
+
+            // En son yazılan yorum en üstte görünsün
+            liste.prepend(yeniYorum);
+        }
+    </script>
 </body>
 </html>
