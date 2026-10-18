@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Oguzhanın Cenneti</title>
     <style>
-        /* RGB Renk Değiştirme Animasyonu */
+        /* RGB Renk Değiştirme Animasyonu (Başlık İçin) */
         @keyframes rgbAnimasyonu {
             0% { color: #ff0000; text-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }       
             17% { color: #ff7f00; text-shadow: 0 0 5px rgba(255, 127, 0, 0.2); }    
@@ -23,9 +23,30 @@
         .rgb-baslik:hover {
             transform: scale(1.02);
         }
+
+        /* Yeni Oyun İçin Özel CSS'ler */
+        .neon-btn {
+            transition: all 0.2s;
+        }
+        .neon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6) !important;
+        }
+        .skor-satir {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #eee;
+            font-size: 15px;
+        }
+        .skor-satir:last-child { border-bottom: none; }
+        .skor-derece { font-weight: bold; color: #ffeb3b; }
+        .skor-puan { color: #00e676; font-weight: bold; }
     </style>
 </head>
-<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px; padding-bottom: 50px;">
+<body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px; padding-bottom: 50px; background-color: #f4f4f9;">
+    
     <h1>Hoşgeldiniz, burada yaptığınız her harekete dikkat edin.</h1>
     <p>Bu site içerisinde türlü güzellikler sizi bekliyor, yeni içerik ve yenilikler için lütfen ooguzhanayy@gmail.com üzerinden iletişime geçiniz.</p>
 
@@ -38,42 +59,45 @@
         </div>
     </details>
 
-    <!-- OYUN BÖLÜMÜ -->
+    <!-- 🎮 GELİŞTİRİLMİŞ OYUN BÖLÜMÜ (NEON ARCADE) 🎮 -->
     <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
     
-    <div style="max-width: 450px; margin: 30px auto; text-align: center; background: #fff3cd; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <h3 style="margin-top: 0; color: #856404;">🎮 Mini Oyun: Ayak Avı (Hızlı Tıklama)</h3>
-        <p style="font-size: 14px; color: #666;">20 saniyede hedefe en çok kez tıkla, adını tarihe yazdır!</p>
+    <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); color: white; max-width: 500px; margin: 30px auto; text-align: center; border: 2px solid #0f3460;">
+        <h3 style="margin-top: 0; color: #e94560; text-transform: uppercase; font-size: 26px; text-shadow: 0 0 10px rgba(233,69,96,0.6); letter-spacing: 1px;">🎮 Neon Ayak Avı 🎮</h3>
+        <p style="font-size: 14px; color: #a2a2d0; margin-bottom: 20px;">20 saniye içinde hedefi ne kadar hızlı yakalayabilirsin?</p>
         
-        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px;">
+        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız..." style="width: 85%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 25px; text-align: center; font-weight: bold; font-size: 16px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);">
         
-        <button id="oyunuBaslatBtn" onclick="oyunuBaslat()" style="width: 100%; padding: 10px; background-color: #ffc107; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Oyunu Başlat</button>
+        <button id="oyunuBaslatBtn" class="neon-btn" onclick="oyunuBaslat()" style="width: 85%; padding: 12px; background: #e94560; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 18px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);">🚀 Oyunu Başlat 🚀</button>
 
         <!-- Oyun Alanı -->
-        <div id="oyunAlani" style="position: relative; width: 100%; height: 200px; background: #fff; border: 2px dashed #ccc; border-radius: 8px; margin-top: 15px; display: none; overflow: hidden;">
-            <div id="hedef" onclick="hedefe Tiklandi()" style="display: none; position: absolute; width: 50px; height: 50px; background: #28a745; color: white; border-radius: 50%; text-align: center; line-height: 50px; font-weight: bold; cursor: pointer; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">🦶</div>
+        <div id="oyunAlani" style="position: relative; width: 100%; height: 280px; background: rgba(0,0,0,0.4); border: 2px dashed #43dde6; border-radius: 10px; margin-top: 20px; display: none; overflow: hidden; cursor: crosshair; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);">
+            <!-- Hedef (onClick içindeki boşluk hatası düzeltildi ve animasyon eklendi) -->
+            <div id="hedef" onmousedown="hedefeTiklandi()" style="display: none; position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, #ffeb3b, #ff9800); border-radius: 50%; text-align: center; line-height: 60px; font-size: 35px; cursor: pointer; user-select: none; box-shadow: 0 0 15px #ffeb3b, inset 0 0 10px rgba(255,255,255,0.5); transition: transform 0.05s ease-out;">🦶</div>
         </div>
 
-        <div id="oyunBilgi" style="margin-top: 10px; font-weight: bold; font-size: 16px; color: #333;"></div>
+        <div id="oyunBilgi" style="margin-top: 20px; font-weight: bold; font-size: 20px; color: #43dde6; text-shadow: 0 0 5px rgba(67,221,230,0.5);"></div>
 
         <!-- Skor Tablosu -->
-        <h4 style="margin-top: 25px; color: #333; text-align: left;">🏆 Küresel Skor Tablosu</h4>
-        <div id="skorTablosu" style="text-align: left; max-height: 150px; overflow-y: auto; background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-            <p style="font-size: 13px; color: #777; margin: 0;">Skorlar yükleniyor...</p>
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 30px; border: 1px solid #0f3460;">
+            <h4 style="margin: 0 0 15px 0; color: #e94560; text-align: center; text-transform: uppercase; font-size: 18px; letter-spacing: 1px;">🏆 Efsaneler Tablosu 🏆</h4>
+            <div id="skorTablosu" style="text-align: left; max-height: 200px; overflow-y: auto; padding-right: 5px;">
+                <p style="font-size: 14px; color: #888; text-align: center; margin: 0;">Skorlar yükleniyor...</p>
+            </div>
         </div>
     </div>
 
     <!-- Yorum Bölümü -->
     <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
     
-    <div style="max-width: 450px; margin: 30px auto; text-align: left; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <div style="max-width: 450px; margin: 30px auto; text-align: left; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee;">
         <h3 style="text-align: center; margin-top: 0; color: #333;">Ziyaretçi Yorumları</h3>
         
         <input type="text" id="kullaniciAdi" placeholder="Kullanıcı Adınız" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px;">
         
         <textarea id="yorumMetni" placeholder="Yorumunuzu buraya yazın..." rows="3" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"></textarea>
         
-        <button id="yorumGonderBtn" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Yorumu Gönder</button>
+        <button id="yorumGonderBtn" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s;">Yorumu Gönder</button>
 
         <!-- Yorumların Listeleneceği Alan -->
         <div id="yorumListesi" style="margin-top: 20px;"></div>
@@ -101,12 +125,11 @@
         let kalanSure = 20;
         let oyunAktif = false;
         let zamanlayici;
-        let hedefZamanlayici;
 
         function oyunuBaslat() {
             const ad = document.getElementById('oyuncuAdi').value.trim();
             if (ad === "") {
-                alert("Lütfen oyuna başlamadan önce oyuncu adınızı yazın!");
+                alert("Lütfen oyuna başlamadan önce efsanevi oyuncu adınızı yazın!");
                 return;
             }
 
@@ -116,14 +139,12 @@
             document.getElementById('oyuncuAdi').disabled = true;
             document.getElementById('oyunuBaslatBtn').style.display = 'none';
             document.getElementById('oyunAlani').style.display = 'block';
-            document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
-
+            bilgiyiGuncelle();
             hedefiTasi();
 
-            // Süre sayacı
             zamanlayici = setInterval(() => {
                 kalanSure--;
-                document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
+                bilgiyiGuncelle();
 
                 if (kalanSure <= 0) {
                     oyunuBitir(ad);
@@ -134,8 +155,20 @@
         function hedefeTiklandi() {
             if (!oyunAktif) return;
             skor++;
-            document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
+            bilgiyiGuncelle();
+            
+            // Tıklama efekti (hedef küçülüp geri büyür)
+            const hedef = document.getElementById('hedef');
+            hedef.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                hedef.style.transform = 'scale(1)';
+            }, 50);
+
             hedefiTasi();
+        }
+
+        function bilgiyiGuncelle() {
+            document.getElementById('oyunBilgi').innerHTML = `⏱️ Süre: <span style="color:#ffeb3b">${kalanSure}s</span> &nbsp;|&nbsp; 🎯 Skor: <span style="color:#00e676">${skor}</span>`;
         }
 
         function hedefiTasi() {
@@ -143,11 +176,12 @@
             const hedef = document.getElementById('hedef');
             hedef.style.display = 'block';
 
-            const maxX = alan.clientWidth - 55;
-            const maxY = alan.clientHeight - 55;
+            // Hedefin dışarı taşmasını engellemek için max sınırları belirliyoruz
+            const maxX = alan.clientWidth - 70;
+            const maxY = alan.clientHeight - 70;
 
-            const rastgeleX = Math.floor(Math.random() * maxX);
-            const rastgeleY = Math.floor(Math.random() * maxY);
+            const rastgeleX = Math.max(0, Math.floor(Math.random() * maxX));
+            const rastgeleY = Math.max(0, Math.floor(Math.random() * maxY));
 
             hedef.style.left = rastgeleX + 'px';
             hedef.style.top = rastgeleY + 'px';
@@ -175,20 +209,22 @@
         window.oyunuBitir = function(ad) {
             oyunAktif = false;
             clearInterval(zamanlayici);
-            clearTimeout(hedefZamanlayici);
 
             document.getElementById('hedef').style.display = 'none';
             document.getElementById('oyunAlani').style.display = 'none';
             document.getElementById('oyunuBaslatBtn').style.display = 'block';
+            document.getElementById('oyunuBaslatBtn').innerText = "Tekrar Oyna 🔄";
             document.getElementById('oyuncuAdi').disabled = false;
-            document.getElementById('oyunBilgi').textContent = `Süre Bitti! Toplam Skorun: ${skor}`;
+            document.getElementById('oyunBilgi').innerHTML = `Süre Bitti! <br><span style="color:#ffeb3b; font-size: 24px;">Toplam Skorun: ${skor}</span>`;
 
-            // Firebase'e skoru gönder
-            push(skorlarRef, {
-                ad: ad,
-                skor: skor,
-                tarih: new Date().toLocaleDateString('tr-TR')
-            });
+            // Skoru sadece 0'dan büyükse veritabanına kaydet
+            if (skor > 0) {
+                push(skorlarRef, {
+                    ad: ad,
+                    skor: skor,
+                    tarih: new Date().toLocaleDateString('tr-TR')
+                });
+            }
         };
 
         // --- SKOR TABLOSUNU ANLIK DİNLE VE SIRALA ---
@@ -203,16 +239,21 @@
                 // En yüksek skordan en düşüğe doğru sırala
                 skorDizisi.sort((a, b) => b.skor - a.skor);
 
-                // İlk 5 kişiyi göster
-                skorDizisi.slice(0, 5).forEach((item, index) => {
-                    const p = document.createElement('div');
-                    p.style.padding = "4px 0";
-                    p.style.borderBottom = "1px solid #eee";
-                    p.innerHTML = `<strong>#${index+1} ${item.ad}</strong>: <span style="color: #28a745; float: right; font-weight: bold;">${item.skor} Puan</span>`;
-                    tabloDiv.appendChild(p);
+                // İlk 10 kişiyi göster
+                skorDizisi.slice(0, 10).forEach((item, index) => {
+                    let madalya = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ``;
+                    const div = document.createElement('div');
+                    div.className = 'skor-satir';
+                    div.innerHTML = `
+                        <div>
+                            <span class="skor-derece">#${index+1}</span> ${madalya} ${item.ad}
+                        </div>
+                        <span class="skor-puan">${item.skor} PTS</span>
+                    `;
+                    tabloDiv.appendChild(div);
                 });
             } else {
-                tabloDiv.innerHTML = `<p style="font-size: 13px; color: #777; margin: 0;">Henüz oynayan yok, ilk sen ol!</p>`;
+                tabloDiv.innerHTML = `<p style="font-size: 14px; color: #a2a2d0; text-align: center; margin: 0;">Henüz oynayan yok, ilk sen ol ve liderliği al!</p>`;
             }
         });
 
@@ -239,9 +280,7 @@
                         const dateB = new Date(tarihB[2], tarihB[1]-1, tarihB[0], saatB[0], saatB[1]);
 
                         return dateA - dateB;
-                    } catch (e) {
-                        return 0;
-                    }
+                    } catch (e) { return 0; }
                 });
 
                 yorumDizisi.forEach(yorum => {
