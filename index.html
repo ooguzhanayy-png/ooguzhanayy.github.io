@@ -38,6 +38,31 @@
         </div>
     </details>
 
+    <!-- OYUN BÖLÜMÜ -->
+    <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
+    
+    <div style="max-width: 450px; margin: 30px auto; text-align: center; background: #fff3cd; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3 style="margin-top: 0; color: #856404;">🎮 Mini Oyun: Ayak Avı (Hızlı Tıklama)</h3>
+        <p style="font-size: 14px; color: #666;">20 saniyede hedefe en çok kez tıkla, adını tarihe yazdır!</p>
+        
+        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px;">
+        
+        <button id="oyunuBaslatBtn" onclick="oyunuBaslat()" style="width: 100%; padding: 10px; background-color: #ffc107; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Oyunu Başlat</button>
+
+        <!-- Oyun Alanı -->
+        <div id="oyunAlani" style="position: relative; width: 100%; height: 200px; background: #fff; border: 2px dashed #ccc; border-radius: 8px; margin-top: 15px; display: none; overflow: hidden;">
+            <div id="hedef" onclick="hedefe Tiklandi()" style="display: none; position: absolute; width: 50px; height: 50px; background: #28a745; color: white; border-radius: 50%; text-align: center; line-height: 50px; font-weight: bold; cursor: pointer; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">🦶</div>
+        </div>
+
+        <div id="oyunBilgi" style="margin-top: 10px; font-weight: bold; font-size: 16px; color: #333;"></div>
+
+        <!-- Skor Tablosu -->
+        <h4 style="margin-top: 25px; color: #333; text-align: left;">🏆 Küresel Skor Tablosu</h4>
+        <div id="skorTablosu" style="text-align: left; max-height: 150px; overflow-y: auto; background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <p style="font-size: 13px; color: #777; margin: 0;">Skorlar yükleniyor...</p>
+        </div>
+    </div>
+
     <!-- Yorum Bölümü -->
     <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
     
@@ -70,7 +95,66 @@
         }
     </script>
 
-    <!-- Ortak Veritabanı (Firebase) Scripti -->
+    <!-- Oyun Mantığı (Ön Yüz) -->
+    <script>
+        let skor = 0;
+        let kalanSure = 20;
+        let oyunAktif = false;
+        let zamanlayici;
+        let hedefZamanlayici;
+
+        function oyunuBaslat() {
+            const ad = document.getElementById('oyuncuAdi').value.trim();
+            if (ad === "") {
+                alert("Lütfen oyuna başlamadan önce oyuncu adınızı yazın!");
+                return;
+            }
+
+            skor = 0;
+            kalanSure = 20;
+            oyunAktif = true;
+            document.getElementById('oyuncuAdi').disabled = true;
+            document.getElementById('oyunuBaslatBtn').style.display = 'none';
+            document.getElementById('oyunAlani').style.display = 'block';
+            document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
+
+            hedefiTasi();
+
+            // Süre sayacı
+            zamanlayici = setInterval(() => {
+                kalanSure--;
+                document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
+
+                if (kalanSure <= 0) {
+                    oyunuBitir(ad);
+                }
+            }, 1000);
+        }
+
+        function hedefeTiklandi() {
+            if (!oyunAktif) return;
+            skor++;
+            document.getElementById('oyunBilgi').textContent = `Süre: ${kalanSure}s | Skor: ${skor}`;
+            hedefiTasi();
+        }
+
+        function hedefiTasi() {
+            const alan = document.getElementById('oyunAlani');
+            const hedef = document.getElementById('hedef');
+            hedef.style.display = 'block';
+
+            const maxX = alan.clientWidth - 55;
+            const maxY = alan.clientHeight - 55;
+
+            const rastgeleX = Math.floor(Math.random() * maxX);
+            const rastgeleY = Math.floor(Math.random() * maxY);
+
+            hedef.style.left = rastgeleX + 'px';
+            hedef.style.top = rastgeleY + 'px';
+        }
+    </script>
+
+    <!-- Ortak Veritabanı (Firebase) Scripti - Hem Yorumlar Hem Skorlar -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
@@ -80,22 +164,68 @@
             databaseURL: "https://cennetyorumlar-48e05-default-rtdb.europe-west1.firebasedatabase.app"
         };
 
-        // Firebase'i başlat
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        
+        // Referanslar
         const yorumlarRef = ref(db, 'ziyaretci_yorumlari');
+        const skorlarRef = ref(db, 'oyun_skorlari');
 
-        // Veritabanındaki yorumları anlık olarak dinle ve ekrana bas
+        // --- SKORLARI BİTİRME VE KAYDETME FONKSİYONU (GLOBAL) ---
+        window.oyunuBitir = function(ad) {
+            oyunAktif = false;
+            clearInterval(zamanlayici);
+            clearTimeout(hedefZamanlayici);
+
+            document.getElementById('hedef').style.display = 'none';
+            document.getElementById('oyunAlani').style.display = 'none';
+            document.getElementById('oyunuBaslatBtn').style.display = 'block';
+            document.getElementById('oyuncuAdi').disabled = false;
+            document.getElementById('oyunBilgi').textContent = `Süre Bitti! Toplam Skorun: ${skor}`;
+
+            // Firebase'e skoru gönder
+            push(skorlarRef, {
+                ad: ad,
+                skor: skor,
+                tarih: new Date().toLocaleDateString('tr-TR')
+            });
+        };
+
+        // --- SKOR TABLOSUNU ANLIK DİNLE VE SIRALA ---
+        onValue(skorlarRef, (snapshot) => {
+            const tabloDiv = document.getElementById('skorTablosu');
+            tabloDiv.innerHTML = "";
+            
+            const data = snapshot.val();
+            if (data) {
+                let skorDizisi = Object.values(data);
+                
+                // En yüksek skordan en düşüğe doğru sırala
+                skorDizisi.sort((a, b) => b.skor - a.skor);
+
+                // İlk 5 kişiyi göster
+                skorDizisi.slice(0, 5).forEach((item, index) => {
+                    const p = document.createElement('div');
+                    p.style.padding = "4px 0";
+                    p.style.borderBottom = "1px solid #eee";
+                    p.innerHTML = `<strong>#${index+1} ${item.ad}</strong>: <span style="color: #28a745; float: right; font-weight: bold;">${item.skor} Puan</span>`;
+                    tabloDiv.appendChild(p);
+                });
+            } else {
+                tabloDiv.innerHTML = `<p style="font-size: 13px; color: #777; margin: 0;">Henüz oynayan yok, ilk sen ol!</p>`;
+            }
+        });
+
+        // --- YORUMLARI DİNLE VE LİSTELE (1453 En Altta Sabit) ---
         onValue(yorumlarRef, (snapshot) => {
             const liste = document.getElementById('yorumListesi');
-            liste.innerHTML = ""; // Listeyi temizle
+            liste.innerHTML = ""; 
             
             const data = snapshot.val();
             if (data) {
                 const yorumDizisi = Object.values(data);
                 
-                // --- TARİHE GÖRE SIRALAMA ALGORİTMASI ---
-                // Yorumları eskiden yeniye doğru sıraya dizer (1453 en başa geçer)
+                // Tarihe göre eskiden yeniye sırala (1453 en alta gider)
                 yorumDizisi.sort((a, b) => {
                     try {
                         const parcaA = a.tarih.split(' ');
@@ -114,14 +244,13 @@
                     }
                 });
 
-                // Sıralanmış diziyi ekrana bas (Eski olanlar alta doğru itilir)
                 yorumDizisi.forEach(yorum => {
                     ekranaYorumBas(yorum.ad, yorum.metin, yorum.tarih);
                 });
             }
         });
 
-        // Gönder butonuna tıklandığında çalışacak kod
+        // Yorum Gönder Butonu
         document.getElementById('yorumGonderBtn').addEventListener('click', () => {
             const adInput = document.getElementById('kullaniciAdi');
             const metinInput = document.getElementById('yorumMetni');
@@ -134,7 +263,6 @@
                 return;
             }
 
-            // Tarih formatını sabitle (Fatih'in formatı olan DD.MM.YYYY ile aynı olsun)
             const simdi = new Date();
             const tarih = ("0" + simdi.getDate()).slice(-2) + "." + 
                           ("0" + (simdi.getMonth() + 1)).slice(-2) + "." + 
@@ -142,19 +270,16 @@
                           ("0" + simdi.getHours()).slice(-2) + ":" + 
                           ("0" + simdi.getMinutes()).slice(-2);
 
-            // Yorumu Firebase veritabanına gönder
             push(yorumlarRef, {
                 ad: ad,
                 metin: metin,
                 tarih: tarih
             });
 
-            // Kutuları temizle
             adInput.value = "";
             metinInput.value = "";
         });
 
-        // Yorumları görsel olarak oluşturan fonksiyon
         function ekranaYorumBas(ad, metin, tarih) {
             const liste = document.getElementById('yorumListesi');
             const yeniYorum = document.createElement('div');
@@ -174,7 +299,6 @@
             yeniYorum.appendChild(baslik);
             yeniYorum.appendChild(icerik);
 
-            // Her yeni gelen yorumu EN ÜSTE yerleştirir
             liste.prepend(yeniYorum);
         }
     </script>
