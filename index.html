@@ -88,7 +88,7 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%23ff0000" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%23ff0000" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%23ff0000" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%23ff0000" stroke-width="2"/></svg>') 12 12, crosshair !important;
         }
 
-        /* Sabit Hitbox (Çerçeve) Yapısı - Tüm hedeflerde 66x66px sabit tıklama alanı */
+        /* Sabit Hitbox (Çerçeve) Yapısı */
         .hedef-kutu {
             position: absolute;
             width: 66px;
@@ -109,7 +109,7 @@
             display: block;
         }
 
-        /* 1. Standart Ayak (%100 Çerçeve İçi) */
+        /* 1. Standart Ayak */
         .hedef-normal {
             border: 2px solid #ccc;
             box-shadow: 0 0 8px rgba(255,255,255,0.3);
@@ -121,7 +121,7 @@
             border-radius: 50%;
         }
 
-        /* 2. Oğuz'un Ayağı (Hitbox sabit, içindeki fotoğraf %75) */
+        /* 2. Oğuz'un Ayağı */
         @keyframes oguzKayma { 
             0% { transform: translateX(-18px); } 
             100% { transform: translateX(18px); } 
@@ -138,7 +138,7 @@
             border-radius: 6px;
         }
 
-        /* 3. Efsanevi Ayak (Hitbox sabit, içindeki fotoğraf %85) */
+        /* 3. Efsanevi Ayak */
         @keyframes efsaneKacis {
             0% { transform: translate(0px, 0px) scale(1); }
             50% { transform: translate(28px, -28px) scale(0.95); }
@@ -156,7 +156,7 @@
             border-radius: 8px;
         }
 
-        /* 4. Ceza Çarpısı (-2 Puan) */
+        /* 4. Ceza Çarpısı */
         .hedef-carpi {
             border: 3px solid #ff1744;
             background: radial-gradient(circle, rgba(255,23,68,0.25), rgba(17,24,39,0.95));
@@ -229,7 +229,6 @@
             box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
         }
 
-        /* Easter Egg Açılır Pencere (Modal) */
         .pati-modal-arkaplan {
             display: none;
             position: fixed;
@@ -273,9 +272,7 @@
             padding: 0;
             transition: transform 0.2s;
         }
-        .pati-kapat-btn:hover {
-            transform: scale(1.1);
-        }
+        .pati-kapat-btn:hover { transform: scale(1.1); }
         .pati-secim-btn {
             padding: 10px 25px;
             margin: 10px 8px 0 8px;
@@ -286,9 +283,7 @@
             cursor: pointer;
             transition: transform 0.15s;
         }
-        .pati-secim-btn:hover {
-            transform: translateY(-2px);
-        }
+        .pati-secim-btn:hover { transform: translateY(-2px); }
         .pati-indir-btn {
             display: inline-block;
             margin-top: 15px;
@@ -300,9 +295,16 @@
             border-radius: 8px;
             transition: transform 0.2s;
         }
-        .pati-indir-btn:hover {
-            transform: translateY(-2px);
-            background-color: #00c853;
+        .pati-indir-btn:hover { transform: translateY(-2px); background-color: #00c853; }
+
+        /* Yazı Parlayıp Sönme (Neon Pulse) Animasyonu */
+        @keyframes yaziParlat {
+            0% { opacity: 0.4; text-shadow: 0 0 2px rgba(255, 77, 77, 0.3); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 77, 77, 0.9), 0 0 25px rgba(255, 77, 77, 0.6); }
+            100% { opacity: 0.4; text-shadow: 0 0 2px rgba(255, 77, 77, 0.3); }
+        }
+        .parlayan-yazi {
+            animation: yaziParlat 1.5s infinite ease-in-out;
         }
     </style>
 </head>
@@ -415,10 +417,17 @@
                 <a href="kedi.jpg" download="kedi.jpg" class="pati-indir-btn">📥 Fotoğrafı İndir</a>
             </div>
 
-            <!-- 3. Aşama: Hayır Seçilirse (Yazı ve 5 sn sonra zenci.jpg) -->
+            <!-- 3. Aşama: Hayır Seçilirse (Parlayan Yazı + Çarpı ile zenci.jpg Açma) -->
             <div id="patiHayirAlani" style="display: none; margin-top: 15px;">
-                <p id="patiHayirYazi" style="font-size: 20px; font-weight: bold; color: #ff4d4d; margin: 15px 0;"></p>
-                <img id="patiHayirFoto" src="zenci.jpg" alt="Sürpriz" style="display: none; max-width: 100%; max-height: 350px; border-radius: 10px; border: 2px solid #ff4d4d; margin: 15px auto 0 auto;">
+                <p id="patiHayirYazi" class="parlayan-yazi" style="font-size: 20px; font-weight: bold; color: #ff4d4d; margin: 15px 0;"></p>
+                
+                <!-- Çarpı tuşuna basınca açılacak buton ve fotoğraf alanı -->
+                <div id="patiGizliFotoBolumu" style="display: none; margin-top: 15px;">
+                    <button onclick="zenciFotoGoster()" style="padding: 8px 16px; background-color: #e94560; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">❌ Görseli Aç / Göster</button>
+                    <div id="zenciFotoKutusu" style="display: none; margin-top: 10px;">
+                        <img src="zenci.jpg" alt="Sürpriz" style="max-width: 100%; max-height: 300px; border-radius: 10px; border: 2px solid #ff4d4d; display: block; margin: 0 auto;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -427,19 +436,16 @@
     <!-- Oyun ve Easter Egg Mantığı -->
     <script>
         // --- EASTER EGG (KEDİ PATİSİ) FONKSİYONLARI ---
-        let hayirZamanlayici = null;
-
         function patiModalAc() {
-            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
             document.getElementById('patiSoruAlani').style.display = 'block';
             document.getElementById('patiEvetAlani').style.display = 'none';
             document.getElementById('patiHayirAlani').style.display = 'none';
-            document.getElementById('patiHayirFoto').style.display = 'none';
+            document.getElementById('patiGizliFotoBolumu').style.display = 'none';
+            document.getElementById('zenciFotoKutusu').style.display = 'none';
             document.getElementById('patiModal').style.display = 'flex';
         }
 
         function patiModalKapat() {
-            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
             document.getElementById('patiModal').style.display = 'none';
         }
 
@@ -452,19 +458,23 @@
             document.getElementById('patiSoruAlani').style.display = 'none';
             const hayirAlani = document.getElementById('patiHayirAlani');
             const hayirYazi = document.getElementById('patiHayirYazi');
-            const hayirFoto = document.getElementById('patiHayirFoto');
+            const gizliBolum = document.getElementById('patiGizliFotoBolumu');
 
             hayirAlani.style.display = 'block';
-            hayirFoto.style.display = 'none';
+            gizliBolum.style.display = 'none';
+            document.getElementById('zenciFotoKutusu').style.display = 'none';
 
-            // HAYIR METNİ (İstediğin metni tırnak içinden düzenleyebilirsin)
-            hayirYazi.textContent = "Seni küçük N***a sayfamdan s***ir git";
+            // İstediğin tam metin (Parlayıp sönen class ile)
+            hayirYazi.textContent = "Seni küçük Nig*a sayfamdan si*tir git";
 
-            // Yazı çıktıktan 5 saniye (5000 ms) sonra fotoğraf belirir
-            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
-            hayirZamanlayici = setTimeout(() => {
-                hayirFoto.style.display = 'block';
+            // Yazı çıktıktan 5 saniye sonra çarpı/açma tuşu belirir
+            setTimeout(() => {
+                gizliBolum.style.display = 'block';
             }, 5000);
+        }
+
+        function zenciFotoGoster() {
+            document.getElementById('zenciFotoKutusu').style.display = 'block';
         }
 
         // --- OYUN AÇILIR KUTU VE OYUN MANTIĞI ---
