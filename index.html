@@ -45,7 +45,7 @@
         .skor-derece { font-weight: bold; color: #ffeb3b; }
         .skor-puan { color: #00e676; font-weight: bold; }
 
-        /* Vuruş Detayları İçin Bilgi (Info) İkonu ve Açılır Kutu (Tooltip) */
+        /* Vuruş Detayları İçin Bilgi İkonu ve Tooltip */
         .info-icon {
             display: inline-block;
             margin-left: 10px;
@@ -66,7 +66,7 @@
             position: absolute;
             z-index: 100;
             top: -10px;
-            left: 130%; /* İkonun sağına açılır */
+            left: 130%; 
             opacity: 0;
             transition: opacity 0.2s;
             font-size: 13px;
@@ -82,21 +82,27 @@
         .t-ogz { color: #00e676; font-weight: bold;}
         .t-efs { color: #ffeb3b; font-weight: bold; text-shadow: 0 0 5px #ffeb3b;}
 
-        /* Hedef Sınıfları ve Animasyonları */
+        /* Hedef Sınıfları */
         .hedef-ortak {
             position: absolute;
-            cursor: crosshair;
             user-select: none;
             transition: opacity 0.2s, transform 0.1s;
             border-radius: 50%;
             object-fit: cover;
         }
+        
+        /* 🎯 KLASİK FPS 4 ÇİZGİLİ KIRMIZI NİŞANGAH (CROSSHAIR) 🎯 */
+        #oyunAlani, .hedef-ortak {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%23ff0000" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%23ff0000" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%23ff0000" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%23ff0000" stroke-width="2"/></svg>') 12 12, crosshair !important;
+        }
+
         .hedef-normal {
             width: 60px; height: 60px; border: 2px solid #ccc; box-shadow: 0 0 8px rgba(255,255,255,0.3);
         }
         @keyframes oguzKayma { 0% { transform: translateX(-15px); } 100% { transform: translateX(15px); } }
         .hedef-nadir {
-            width: 50px; height: 50px; border: 3px solid #00e676; box-shadow: 0 0 15px rgba(0, 230, 118, 0.6);
+            /* Ouz'un ayağı: Normalin (60px) tam %75'i = 45px */
+            width: 45px; height: 45px; border: 3px solid #00e676; box-shadow: 0 0 15px rgba(0, 230, 118, 0.6);
             animation: oguzKayma 0.8s infinite alternate ease-in-out;
         }
         @keyframes efsaneKacis {
@@ -105,8 +111,45 @@
             100% { transform: translate(-20px, 20px) scale(1.1); }
         }
         .hedef-efsanevi {
-            width: 45px; height: 45px; border: 3px solid #ffeb3b; box-shadow: 0 0 25px #ffeb3b, inset 0 0 10px #ff9800;
+            /* Efsanevi ayak: Normalin (60px) tam %85'i = 51px */
+            width: 51px; height: 51px; border: 3px solid #ffeb3b; box-shadow: 0 0 25px #ffeb3b, inset 0 0 10px #ff9800;
             animation: efsaneKacis 0.6s infinite alternate;
+        }
+
+        /* Yorum Altındaki Oyun Açılır Kutu CSS'i */
+        .oyun-acilir-baslik {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #0f3460;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .oyun-acilir-baslik:hover {
+            background-color: #e94560;
+            transform: translateY(-2px);
+        }
+        .oyun-detay {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background-color: #fff3cd;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .oyun-uyari-text {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -124,33 +167,7 @@
         </div>
     </details>
 
-    <!-- 🎮 BÜYÜTÜLMÜŞ VE GELİŞTİRİLMİŞ OYUN BÖLÜMÜ 🎮 -->
-    <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
-    
-    <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); color: white; max-width: 600px; margin: 30px auto; text-align: center; border: 2px solid #0f3460;">
-        <h3 style="margin-top: 0; color: #e94560; text-transform: uppercase; font-size: 26px; text-shadow: 0 0 10px rgba(233,69,96,0.6); letter-spacing: 1px;">🎮 Neon Ayak Avı 🎮</h3>
-        <p style="font-size: 14px; color: #a2a2d0; margin-bottom: 20px;">Farklı hedefleri avla! Normal (1P) - Nadir (3P) - Efsanevi (10P)</p>
-        
-        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız..." style="width: 85%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 25px; text-align: center; font-weight: bold; font-size: 16px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);">
-        
-        <button id="oyunuBaslatBtn" class="neon-btn" onclick="oyunuBaslat()" style="width: 85%; padding: 12px; background: #e94560; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 18px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);">🚀 Oyunu Başlat 🚀</button>
-
-        <div id="oyunAlani" style="position: relative; width: 100%; height: 400px; background: rgba(0,0,0,0.4); border: 2px dashed #43dde6; border-radius: 10px; margin-top: 20px; display: none; overflow: hidden; cursor: crosshair; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
-            <!-- Hedefler JavaScript ile buraya otomatik oluşturulacak -->
-        </div>
-
-        <div id="oyunBilgi" style="margin-top: 20px; font-weight: bold; font-size: 20px; color: #43dde6; text-shadow: 0 0 5px rgba(67,221,230,0.5);"></div>
-
-        <!-- Skor Tablosu -->
-        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 30px; border: 1px solid #0f3460;">
-            <h4 style="margin: 0 0 15px 0; color: #e94560; text-align: center; text-transform: uppercase; font-size: 18px; letter-spacing: 1px;">🏆 Efsaneler Tablosu 🏆</h4>
-            <div id="skorTablosu" style="text-align: left; max-height: 250px; overflow-y: visible; padding-right: 5px;">
-                <p style="font-size: 14px; color: #888; text-align: center; margin: 0;">Skorlar yükleniyor...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Yorum Bölümü -->
+    <!-- Yorum Bölümü (Oyunun Üstüne Alındı) -->
     <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
     
     <div style="max-width: 450px; margin: 30px auto; text-align: left; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee;">
@@ -178,10 +195,61 @@
         }
     </script>
 
+    <!-- 🎮 GİZLİ OYUN BÖLÜMÜ (YORUMLARIN ALTINDA) 🎮 -->
+    <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
+    
+    <div class="oyun-acilir-baslik" onclick="oyunDetayGoster()">Gizemli Oyunu Göster</div>
+    
+    <div id="oyunDetayAlani" class="oyun-detay">
+        <p class="oyun-uyari-text">⚠️ DİKKAT: Bu oyunda ayak yalanmaktadır!<br>Devam etmek istediğinize emin misiniz?</p>
+        <button onclick="oyunuAktifEt()" style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Evet, Oynamak İstiyorum</button>
+    </div>
+
+    <div id="oyunAnaAlani" style="display: none; background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); color: white; max-width: 800px; margin: 30px auto; text-align: center; border: 2px solid #0f3460;">
+        <h3 style="margin-top: 0; color: #e94560; text-transform: uppercase; font-size: 28px; text-shadow: 0 0 10px rgba(233,69,96,0.6); letter-spacing: 2px;">🎮 Ayakların Altında 🎮</h3>
+        <p style="font-size: 15px; color: #a2a2d0; margin-bottom: 20px;">Farklı hedefleri avla! Normal (1P) - Oğuz'un Ayağı (3P) - Efsanevi (10P)</p>
+        
+        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız..." style="width: 80%; max-width: 400px; padding: 12px; margin-bottom: 15px; border: none; border-radius: 25px; text-align: center; font-weight: bold; font-size: 16px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); color: #000;">
+        <br>
+        <button id="oyunuBaslatBtn" class="neon-btn" onclick="oyunuBaslat()" style="width: 80%; max-width: 400px; padding: 12px; background: #e94560; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 18px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);">🚀 Oyunu Başlat 🚀</button>
+
+        <!-- Oyun Alanı (Büyütüldü: Yükseklik 600px, Genişlik max-width 800px içinde esnek) -->
+        <div id="oyunAlani" style="position: relative; width: 100%; height: 600px; background: rgba(0,0,0,0.5); border: 3px solid #43dde6; border-radius: 10px; margin-top: 25px; display: none; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
+            <!-- Hedefler JavaScript ile buraya otomatik oluşturulacak -->
+        </div>
+
+        <div id="oyunBilgi" style="margin-top: 20px; font-weight: bold; font-size: 22px; color: #43dde6; text-shadow: 0 0 5px rgba(67,221,230,0.5);"></div>
+
+        <!-- Skor Tablosu -->
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-top: 30px; border: 1px solid #0f3460;">
+            <h4 style="margin: 0 0 15px 0; color: #e94560; text-align: center; text-transform: uppercase; font-size: 18px; letter-spacing: 1px;">🏆 Efsaneler Tablosu 🏆</h4>
+            <div id="skorTablosu" style="text-align: left; max-height: 250px; overflow-y: visible; padding-right: 5px;">
+                <p style="font-size: 14px; color: #888; text-align: center; margin: 0;">Skorlar yükleniyor...</p>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Oyun Mantığı (Ön Yüz ve İstatistik Takibi) -->
     <script>
+        // Oyun Açılır Kutu Mantığı
+        function oyunDetayGoster() {
+            const detayAlani = document.getElementById('oyunDetayAlani');
+            if(detayAlani.style.display === 'block') {
+                detayAlani.style.display = 'none';
+            } else {
+                detayAlani.style.display = 'block';
+            }
+        }
+
+        function oyunuAktifEt() {
+            document.getElementById('oyunDetayAlani').style.display = 'none';
+            document.querySelector('.oyun-acilir-baslik').style.display = 'none';
+            document.getElementById('oyunAnaAlani').style.display = 'block';
+        }
+
         let skor = 0;
-        let kalanSure = 20;
+        let kalanSure = 30; // Oyun Süresi: 30 Saniye
         let oyunAktif = false;
         let zamanlayici;
         let ureticiZamanlayici;
@@ -191,10 +259,11 @@
         let vurusOguz = 0;
         let vurusEfsanevi = 0;
 
+        // Ayak Çeşitleri, İhtimalleri ve Ekranda Kalma Süreleri (Süreler artırıldı)
         const ayakTipleri = [
-            { resim: 'ayakk.jpg', puan: 1, ekrandaKalma: 1500, sinif: 'hedef-normal' },
-            { resim: 'ouzayak.jpg', puan: 3, ekrandaKalma: 1000, sinif: 'hedef-nadir' },
-            { resim: 'efsaneviayak.jpg', puan: 10, ekrandaKalma: 700, sinif: 'hedef-efsanevi' }
+            { resim: 'ayakk.jpg', puan: 1, ekrandaKalma: 1500, sinif: 'hedef-normal' }, 
+            { resim: 'ouzayak.jpg', puan: 3, ekrandaKalma: 1300, sinif: 'hedef-nadir' }, 
+            { resim: 'efsaneviayak.jpg', puan: 10, ekrandaKalma: 1000, sinif: 'hedef-efsanevi' } 
         ];
 
         function oyunuBaslat() {
@@ -205,7 +274,7 @@
             }
 
             skor = 0;
-            kalanSure = 20;
+            kalanSure = 30; // 30 Saniye
             oyunAktif = true;
             vurusStandart = 0;
             vurusOguz = 0;
@@ -253,7 +322,6 @@
                 
                 skor += tip.puan;
                 
-                // Hangi ayaktan vurulduğunu sayıyoruz
                 if (tip.puan === 1) vurusStandart++;
                 else if (tip.puan === 3) vurusOguz++;
                 else if (tip.puan === 10) vurusEfsanevi++;
@@ -298,7 +366,6 @@
         const yorumlarRef = ref(db, 'ziyaretci_yorumlari');
         const skorlarRef = ref(db, 'oyun_skorlari');
 
-        // Oyunu Bitirme ve Skoru & İstatistikleri Kaydetme
         window.oyunuBitir = function(ad) {
             oyunAktif = false;
             clearInterval(zamanlayici);
@@ -312,7 +379,6 @@
             document.getElementById('oyunBilgi').innerHTML = `Süre Bitti! <br><span style="color:#ffeb3b; font-size: 24px;">Toplam Skorun: ${skor}</span>`;
 
             if (skor > 0) {
-                // Vuruş detaylarıyla birlikte veritabanına gönderiliyor
                 push(skorlarRef, { 
                     ad: ad, 
                     skor: skor, 
@@ -326,7 +392,6 @@
             }
         };
 
-        // Skor Tablosu
         onValue(skorlarRef, (snapshot) => {
             const tabloDiv = document.getElementById('skorTablosu');
             tabloDiv.innerHTML = "";
@@ -337,10 +402,8 @@
                 skorDizisi.slice(0, 10).forEach((item, index) => {
                     let madalya = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ``;
                     
-                    // Sadece 1. olana özel Efsanevi Unvan
                     let unvan = index === 0 ? `<span style="color: #ffeb3b; font-size: 12px; margin-left: 8px; text-shadow: 0 0 5px #ffeb3b; border: 1px solid #ffeb3b; padding: 2px 5px; border-radius: 5px;">👑 Ayak Yalama Üstadı</span>` : ``;
 
-                    // Info (Detay) İkonu ve Tooltip Oluşturma
                     let vurusHTML = "";
                     if (item.vuruslar) {
                         vurusHTML = `
@@ -372,7 +435,6 @@
             }
         });
 
-        // Yorumlar Tablosu (1453 Sabit En Altta)
         onValue(yorumlarRef, (snapshot) => {
             const liste = document.getElementById('yorumListesi');
             liste.innerHTML = ""; 
