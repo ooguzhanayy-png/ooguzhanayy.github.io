@@ -121,7 +121,7 @@
             border-radius: 50%;
         }
 
-        /* 2. Oğuz'un Ayağı (Hitbox sabit, içindeki fotoğraf %75 ve kesilmeden tam sığar) */
+        /* 2. Oğuz'un Ayağı (Hitbox sabit, içindeki fotoğraf %75) */
         @keyframes oguzKayma { 
             0% { transform: translateX(-18px); } 
             100% { transform: translateX(18px); } 
@@ -132,13 +132,13 @@
             animation: oguzKayma 0.8s infinite alternate ease-in-out;
         }
         .hedef-nadir img {
-            width: 72%;
-            height: 72%;
+            width: 75%;
+            height: 75%;
             object-fit: contain;
             border-radius: 6px;
         }
 
-        /* 3. Efsanevi Ayak (Hitbox sabit, içindeki fotoğraf %85 ve kesilmeden tam sığar) */
+        /* 3. Efsanevi Ayak (Hitbox sabit, içindeki fotoğraf %85) */
         @keyframes efsaneKacis {
             0% { transform: translate(0px, 0px) scale(1); }
             50% { transform: translate(28px, -28px) scale(0.95); }
@@ -150,8 +150,8 @@
             animation: efsaneKacis 0.65s infinite alternate;
         }
         .hedef-efsanevi img {
-            width: 82%;
-            height: 82%;
+            width: 85%;
+            height: 85%;
             object-fit: contain;
             border-radius: 8px;
         }
@@ -199,6 +199,110 @@
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 15px;
+        }
+
+        /* 🐾 SAĞ ALT EASTER EGG (KEDİ PATİSİ) CSS 🐾 */
+        .pati-easter-egg {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.55;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 999;
+            user-select: none;
+        }
+        .pati-easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.2) rotate(12deg);
+            border-color: #ff9800;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+        }
+
+        /* Easter Egg Açılır Pencere (Modal) */
+        .pati-modal-arkaplan {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .pati-modal-kutu {
+            position: relative;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 25px;
+            border-radius: 14px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #43dde6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+        .pati-kapat-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            line-height: 30px;
+            padding: 0;
+            transition: transform 0.2s;
+        }
+        .pati-kapat-btn:hover {
+            transform: scale(1.1);
+        }
+        .pati-secim-btn {
+            padding: 10px 25px;
+            margin: 10px 8px 0 8px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .pati-secim-btn:hover {
+            transform: translateY(-2px);
+        }
+        .pati-indir-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 22px;
+            background-color: #00e676;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .pati-indir-btn:hover {
+            transform: translateY(-2px);
+            background-color: #00c853;
         }
     </style>
 </head>
@@ -286,9 +390,84 @@
         </div>
     </div>
 
+    <!-- 🐾 SAĞ ALT MİNİK KEDİ PATİSİ EASTER EGG 🐾 -->
+    <div class="pati-easter-egg" onclick="patiModalAc()" title="Gizli Pati">🐾</div>
 
-    <!-- Oyun Mantığı (Ön Yüz ve İstatistik Takibi) -->
+    <!-- Easter Egg Modal Penceresi -->
+    <div id="patiModal" class="pati-modal-arkaplan">
+        <div class="pati-modal-kutu">
+            <!-- Çarpı (Çıkış) Tuşu -->
+            <button class="pati-kapat-btn" onclick="patiModalKapat()" title="Kapat">✖</button>
+
+            <!-- 1. Aşama: Soru Kısmı -->
+            <div id="patiSoruAlani">
+                <div style="font-size: 40px; margin-bottom: 10px;">🐾</div>
+                <p style="font-size: 18px; font-weight: bold; color: #ffeb3b; margin: 10px 0 20px 0;">
+                    Demek günün güzelleşmesini istiyorsun?
+                </p>
+                <button class="pati-secim-btn" style="background-color: #28a745; color: white;" onclick="patiEvetSecildi()">Evet</button>
+                <button class="pati-secim-btn" style="background-color: #dc3545; color: white;" onclick="patiHayirSecildi()">Hayır</button>
+            </div>
+
+            <!-- 2. Aşama: Evet Seçilirse (kedi.jpg + İndirme Tuşu) -->
+            <div id="patiEvetAlani" style="display: none; margin-top: 10px;">
+                <img src="kedi.jpg" alt="Kedi" style="max-width: 100%; max-height: 350px; border-radius: 10px; border: 2px solid #00e676; display: block; margin: 0 auto;">
+                <a href="kedi.jpg" download="kedi.jpg" class="pati-indir-btn">📥 Fotoğrafı İndir</a>
+            </div>
+
+            <!-- 3. Aşama: Hayır Seçilirse (Yazı ve 5 sn sonra zenci.jpg) -->
+            <div id="patiHayirAlani" style="display: none; margin-top: 15px;">
+                <p id="patiHayirYazi" style="font-size: 20px; font-weight: bold; color: #ff4d4d; margin: 15px 0;"></p>
+                <img id="patiHayirFoto" src="zenci.jpg" alt="Sürpriz" style="display: none; max-width: 100%; max-height: 350px; border-radius: 10px; border: 2px solid #ff4d4d; margin: 15px auto 0 auto;">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Oyun ve Easter Egg Mantığı -->
     <script>
+        // --- EASTER EGG (KEDİ PATİSİ) FONKSİYONLARI ---
+        let hayirZamanlayici = null;
+
+        function patiModalAc() {
+            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
+            document.getElementById('patiSoruAlani').style.display = 'block';
+            document.getElementById('patiEvetAlani').style.display = 'none';
+            document.getElementById('patiHayirAlani').style.display = 'none';
+            document.getElementById('patiHayirFoto').style.display = 'none';
+            document.getElementById('patiModal').style.display = 'flex';
+        }
+
+        function patiModalKapat() {
+            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
+            document.getElementById('patiModal').style.display = 'none';
+        }
+
+        function patiEvetSecildi() {
+            document.getElementById('patiSoruAlani').style.display = 'none';
+            document.getElementById('patiEvetAlani').style.display = 'block';
+        }
+
+        function patiHayirSecildi() {
+            document.getElementById('patiSoruAlani').style.display = 'none';
+            const hayirAlani = document.getElementById('patiHayirAlani');
+            const hayirYazi = document.getElementById('patiHayirYazi');
+            const hayirFoto = document.getElementById('patiHayirFoto');
+
+            hayirAlani.style.display = 'block';
+            hayirFoto.style.display = 'none';
+
+            // HAYIR METNİ (İstediğin metni tırnak içinden düzenleyebilirsin)
+            hayirYazi.textContent = "Seni küçük N***a sayfamdan s***ir git";
+
+            // Yazı çıktıktan 5 saniye (5000 ms) sonra fotoğraf belirir
+            if (hayirZamanlayici) clearTimeout(hayirZamanlayici);
+            hayirZamanlayici = setTimeout(() => {
+                hayirFoto.style.display = 'block';
+            }, 5000);
+        }
+
+        // --- OYUN AÇILIR KUTU VE OYUN MANTIĞI ---
         function oyunDetayGoster() {
             const detayAlani = document.getElementById('oyunDetayAlani');
             detayAlani.style.display = (detayAlani.style.display === 'block') ? 'none' : 'block';
@@ -306,13 +485,11 @@
         let zamanlayici = null;
         let ureticiZamanlayici = null;
 
-        // Vuruş İstatistik Değişkenleri
         let vurusStandart = 0;
         let vurusOguz = 0;
         let vurusEfsanevi = 0;
         let vurusCarpi = 0;
 
-        // Hedef Çeşitleri
         const ayakTipleri = [
             { tur: 'standart', resim: 'ayakk.jpg', puan: 1, ekrandaKalma: 1550, sinif: 'hedef-normal' }, 
             { tur: 'oguz', resim: 'ouzayak.jpg', puan: 3, ekrandaKalma: 1350, sinif: 'hedef-nadir' }, 
@@ -327,7 +504,6 @@
                 return;
             }
 
-            // Eski zamanlayıcılar varsa temizle (çakışmaları önler)
             if (zamanlayici) clearInterval(zamanlayici);
             if (ureticiZamanlayici) clearInterval(ureticiZamanlayici);
 
@@ -347,7 +523,6 @@
             alan.innerHTML = ''; 
             bilgiyiGuncelle();
 
-            // 30 saniyelik geri sayım
             zamanlayici = setInterval(() => {
                 kalanSure--;
                 bilgiyiGuncelle();
@@ -356,7 +531,6 @@
                 }
             }, 1000);
 
-            // Oyun başlar başlamaz ilk hedefi üret ve son saniyeye kadar kesintisiz devam et
             hedefUret();
             ureticiZamanlayici = setInterval(() => {
                 if (oyunAktif && kalanSure > 0) {
@@ -381,7 +555,6 @@
                 hedefKutu.appendChild(img);
             }
 
-            // Kutunun oyun alanından taşmaması için güvenli koordinat hesabı
             const genislik = alan.clientWidth || 750;
             const yukseklik = alan.clientHeight || 600;
             const maxX = Math.max(20, genislik - 90);
@@ -428,17 +601,14 @@
             if (!oyunAktif) return;
 
             try {
-                // Ayak Seçimi (%70 Standart, %20 Oğuz, %10 Efsanevi)
                 const sans = Math.random() * 100;
                 let ayakTipi;
                 if (sans < 70) ayakTipi = ayakTipleri[0];
                 else if (sans < 90) ayakTipi = ayakTipleri[1];
                 else ayakTipi = ayakTipleri[2];
 
-                // Her döngüde kesinlikle 1 ayak çıkar (oyun sonlarında ayak çıkmama sorununu engeller)
                 tekHedefOlustur(ayakTipi);
 
-                // %15 ihtimalle ek olarak yanıltıcı Çarpı (❌) çıkar
                 if (Math.random() * 100 < 15) {
                     tekHedefOlustur(ayakTipleri[3]);
                 }
@@ -477,7 +647,7 @@
             document.getElementById('oyunAlani').innerHTML = ''; 
             
             const btn = document.getElementById('oyunuBaslatBtn');
-            btn.style.display = 'inline-block'; // Butonun sola kaymasını engeller, ortada tutar
+            btn.style.display = 'inline-block';
             btn.innerText = "Tekrar Oyna 🔄";
             
             document.getElementById('oyuncuAdi').disabled = false;
