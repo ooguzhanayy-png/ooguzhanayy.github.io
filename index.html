@@ -56,7 +56,7 @@
         }
         .info-icon .tooltip {
             visibility: hidden;
-            width: 180px;
+            width: 195px;
             background-color: rgba(22, 33, 62, 0.98);
             color: #fff;
             text-align: left;
@@ -78,69 +78,91 @@
             visibility: visible;
             opacity: 1;
         }
-        .t-std { color: #fff; font-weight: bold;}
-        .t-ogz { color: #00e676; font-weight: bold;}
-        .t-efs { color: #ffeb3b; font-weight: bold; text-shadow: 0 0 5px #ffeb3b;}
-        .t-crp { color: #ff4c4c; font-weight: bold; text-shadow: 0 0 5px #ff4c4c;}
+        .t-std { color: #fff; font-weight: bold; }
+        .t-ogz { color: #00e676; font-weight: bold; }
+        .t-efs { color: #ffeb3b; font-weight: bold; text-shadow: 0 0 5px #ffeb3b; }
+        .t-crp { color: #ff4d4d; font-weight: bold; }
 
-        /* Hedef Sınıfları */
-        .hedef-ortak {
-            position: absolute;
-            user-select: none;
-            transition: opacity 0.2s, transform 0.1s;
-            border-radius: 50%;
-            object-fit: cover;
-            box-sizing: border-box; /* Padding ile fotoğrafı küçültürken hitbox'ı korumak için */
-            background-color: rgba(0,0,0,0.6); /* Şeffaf çerçevenin içini doldurur */
-        }
-        
         /* 🎯 KLASİK FPS 4 ÇİZGİLİ KIRMIZI NİŞANGAH (CROSSHAIR) 🎯 */
-        #oyunAlani, .hedef-ortak {
+        #oyunAlani, .hedef-kutu, .hedef-kutu * {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="8" stroke="%23ff0000" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="22" stroke="%23ff0000" stroke-width="2"/><line x1="2" y1="12" x2="8" y2="12" stroke="%23ff0000" stroke-width="2"/><line x1="16" y1="12" x2="22" y2="12" stroke="%23ff0000" stroke-width="2"/></svg>') 12 12, crosshair !important;
         }
 
-        /* Hitboxların Tümü 60x60px Kalıyor, İçteki Fotoğraflar Padding ile Küçülüyor */
-        .hedef-normal {
-            width: 60px; height: 60px; 
-            border: 2px solid #ccc; 
-            box-shadow: 0 0 8px rgba(255,255,255,0.3);
-            /* %100 boyut, padding yok */
-        }
-
-        @keyframes oguzKayma { 0% { transform: translateX(-15px); } 100% { transform: translateX(15px); } }
-        .hedef-nadir {
-            width: 60px; height: 60px; 
-            border: 3px solid #00e676; 
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.6);
-            padding: 7.5px; /* Fotoğrafı %75 (45px) boyutuna düşürür ama hitbox 60px kalır */
-            animation: oguzKayma 0.8s infinite alternate ease-in-out;
-        }
-
-        @keyframes efsaneKacis {
-            0% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(30px, -30px) scale(0.9); }
-            100% { transform: translate(-20px, 20px) scale(1.1); }
-        }
-        .hedef-efsanevi {
-            width: 60px; height: 60px; 
-            border: 3px solid #ffeb3b; 
-            box-shadow: 0 0 25px #ffeb3b, inset 0 0 10px #ff9800;
-            padding: 4.5px; /* Fotoğrafı %85 (51px) boyutuna düşürür ama hitbox 60px kalır */
-            animation: efsaneKacis 0.6s infinite alternate;
-        }
-
-        /* Çarpı (Hata) Hedefi İçin CSS */
-        @keyframes carpiTitreme { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
-        .hedef-carpi {
-            width: 60px; height: 60px;
-            border: 3px solid #ff4c4c;
-            background-color: rgba(255, 76, 76, 0.3);
-            box-shadow: 0 0 15px rgba(255, 76, 76, 0.8);
+        /* Sabit Hitbox (Çerçeve) Yapısı - Tüm hedeflerde 66x66px sabit tıklama alanı */
+        .hedef-kutu {
+            position: absolute;
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            user-select: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            animation: carpiTitreme 0.1s infinite alternate;
+            overflow: hidden;
+            background-color: #111827;
+            transition: opacity 0.15s, transform 0.1s;
+            box-sizing: border-box;
+        }
+        .hedef-kutu img {
+            pointer-events: none;
+            user-select: none;
+            display: block;
+        }
+
+        /* 1. Standart Ayak (%100 Çerçeve İçi) */
+        .hedef-normal {
+            border: 2px solid #ccc;
+            box-shadow: 0 0 8px rgba(255,255,255,0.3);
+        }
+        .hedef-normal img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* 2. Oğuz'un Ayağı (Hitbox sabit, içindeki fotoğraf %75 ve kesilmeden tam sığar) */
+        @keyframes oguzKayma { 
+            0% { transform: translateX(-18px); } 
+            100% { transform: translateX(18px); } 
+        }
+        .hedef-nadir {
+            border: 3px solid #00e676;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.6);
+            animation: oguzKayma 0.8s infinite alternate ease-in-out;
+        }
+        .hedef-nadir img {
+            width: 72%;
+            height: 72%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        /* 3. Efsanevi Ayak (Hitbox sabit, içindeki fotoğraf %85 ve kesilmeden tam sığar) */
+        @keyframes efsaneKacis {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(28px, -28px) scale(0.95); }
+            100% { transform: translate(-22px, 22px) scale(1.05); }
+        }
+        .hedef-efsanevi {
+            border: 3px solid #ffeb3b;
+            box-shadow: 0 0 25px #ffeb3b, inset 0 0 10px #ff9800;
+            animation: efsaneKacis 0.65s infinite alternate;
+        }
+        .hedef-efsanevi img {
+            width: 82%;
+            height: 82%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        /* 4. Ceza Çarpısı (-2 Puan) */
+        .hedef-carpi {
+            border: 3px solid #ff1744;
+            background: radial-gradient(circle, rgba(255,23,68,0.25), rgba(17,24,39,0.95));
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.7);
+            font-size: 32px;
+            line-height: 1;
         }
 
         /* Yorum Altındaki Oyun Açılır Kutu CSS'i */
@@ -194,7 +216,7 @@
         </div>
     </details>
 
-    <!-- Yorum Bölümü (Oyunun Üstüne Alındı) -->
+    <!-- Yorum Bölümü -->
     <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
     
     <div style="max-width: 450px; margin: 30px auto; text-align: left; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee;">
@@ -234,12 +256,21 @@
 
     <div id="oyunAnaAlani" style="display: none; background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 30px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); color: white; max-width: 800px; margin: 30px auto; text-align: center; border: 2px solid #0f3460;">
         <h3 style="margin-top: 0; color: #e94560; text-transform: uppercase; font-size: 28px; text-shadow: 0 0 10px rgba(233,69,96,0.6); letter-spacing: 2px;">🎮 Ayakların Altında 🎮</h3>
-        <p style="font-size: 15px; color: #a2a2d0; margin-bottom: 20px;">Hedefleri avla, ❌ Çarpılara dikkat et (-2 Puan)!</p>
+        <p style="font-size: 15px; color: #a2a2d0; margin-bottom: 20px; line-height: 1.6;">
+            Farklı hedefleri avla, en yüksek skoru topla!<br>
+            <span style="color: #fff;">Standart Ayak (1P)</span> &bull; 
+            <span style="color: #00e676;">Oğuz'un Ayağı (3P)</span> &bull; 
+            <span style="color: #ffeb3b;">Efsanevi Ayak (10P)</span> &bull; 
+            <span style="color: #ff4d4d;">❌ Çarpı (-2P)</span>
+        </p>
         
-        <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız..." style="width: 80%; max-width: 400px; padding: 12px; margin-bottom: 15px; border: none; border-radius: 25px; text-align: center; font-weight: bold; font-size: 16px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); color: #000;">
-        <br>
-        <button id="oyunuBaslatBtn" class="neon-btn" onclick="oyunuBaslat()" style="width: 80%; max-width: 400px; padding: 12px; background: #e94560; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 18px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);">🚀 Oyunu Başlat 🚀</button>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            <input type="text" id="oyuncuAdi" placeholder="Oyuncu Adınız..." style="width: 80%; max-width: 400px; padding: 12px; border: none; border-radius: 25px; text-align: center; font-weight: bold; font-size: 16px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); color: #000;">
+            
+            <button id="oyunuBaslatBtn" class="neon-btn" onclick="oyunuBaslat()" style="display: inline-block; width: 80%; max-width: 400px; margin: 0 auto; padding: 12px; background: #e94560; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 18px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);">🚀 Oyunu Başlat 🚀</button>
+        </div>
 
+        <!-- Oyun Alanı -->
         <div id="oyunAlani" style="position: relative; width: 100%; height: 600px; background: rgba(0,0,0,0.5); border: 3px solid #43dde6; border-radius: 10px; margin-top: 25px; display: none; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);">
             <!-- Hedefler JavaScript ile buraya otomatik oluşturulacak -->
         </div>
@@ -260,11 +291,7 @@
     <script>
         function oyunDetayGoster() {
             const detayAlani = document.getElementById('oyunDetayAlani');
-            if(detayAlani.style.display === 'block') {
-                detayAlani.style.display = 'none';
-            } else {
-                detayAlani.style.display = 'block';
-            }
+            detayAlani.style.display = (detayAlani.style.display === 'block') ? 'none' : 'block';
         }
 
         function oyunuAktifEt() {
@@ -276,21 +303,21 @@
         let skor = 0;
         let kalanSure = 30;
         let oyunAktif = false;
-        let zamanlayici;
-        let ureticiZamanlayici;
+        let zamanlayici = null;
+        let ureticiZamanlayici = null;
 
-        // Vuruş İstatistikleri
+        // Vuruş İstatistik Değişkenleri
         let vurusStandart = 0;
         let vurusOguz = 0;
         let vurusEfsanevi = 0;
-        let vurusCarpi = 0; // Yeni: Çarpı vuruşları
+        let vurusCarpi = 0;
 
-        // Hedef Çeşitleri (Resimli olanlar ve Emoji olan Çarpı)
-        const hedefTipleri = [
-            { tip: 'img', resim: 'ayakk.jpg', puan: 1, ekrandaKalma: 1500, sinif: 'hedef-normal' }, 
-            { tip: 'img', resim: 'ouzayak.jpg', puan: 3, ekrandaKalma: 1300, sinif: 'hedef-nadir' }, 
-            { tip: 'img', resim: 'efsaneviayak.jpg', puan: 10, ekrandaKalma: 1000, sinif: 'hedef-efsanevi' },
-            { tip: 'emoji', resim: '❌', puan: -2, ekrandaKalma: 1300, sinif: 'hedef-carpi' } // Yeni Bombamız
+        // Hedef Çeşitleri
+        const ayakTipleri = [
+            { tur: 'standart', resim: 'ayakk.jpg', puan: 1, ekrandaKalma: 1550, sinif: 'hedef-normal' }, 
+            { tur: 'oguz', resim: 'ouzayak.jpg', puan: 3, ekrandaKalma: 1350, sinif: 'hedef-nadir' }, 
+            { tur: 'efsanevi', resim: 'efsaneviayak.jpg', puan: 10, ekrandaKalma: 1050, sinif: 'hedef-efsanevi' },
+            { tur: 'carpi', resim: null, puan: -2, ekrandaKalma: 1300, sinif: 'hedef-carpi' }
         ];
 
         function oyunuBaslat() {
@@ -300,10 +327,13 @@
                 return;
             }
 
+            // Eski zamanlayıcılar varsa temizle (çakışmaları önler)
+            if (zamanlayici) clearInterval(zamanlayici);
+            if (ureticiZamanlayici) clearInterval(ureticiZamanlayici);
+
             skor = 0;
-            kalanSure = 30; // 30 Saniye
+            kalanSure = 30;
             oyunAktif = true;
-            
             vurusStandart = 0;
             vurusOguz = 0;
             vurusEfsanevi = 0;
@@ -311,85 +341,117 @@
 
             document.getElementById('oyuncuAdi').disabled = true;
             document.getElementById('oyunuBaslatBtn').style.display = 'none';
-            document.getElementById('oyunAlani').style.display = 'block';
-            document.getElementById('oyunAlani').innerHTML = ''; 
+            
+            const alan = document.getElementById('oyunAlani');
+            alan.style.display = 'block';
+            alan.innerHTML = ''; 
             bilgiyiGuncelle();
 
+            // 30 saniyelik geri sayım
             zamanlayici = setInterval(() => {
                 kalanSure--;
                 bilgiyiGuncelle();
-                if (kalanSure <= 0) oyunuBitir(ad);
+                if (kalanSure <= 0) {
+                    oyunuBitir(ad);
+                }
             }, 1000);
 
+            // Oyun başlar başlamaz ilk hedefi üret ve son saniyeye kadar kesintisiz devam et
             hedefUret();
-            ureticiZamanlayici = setInterval(hedefUret, 700); 
+            ureticiZamanlayici = setInterval(() => {
+                if (oyunAktif && kalanSure > 0) {
+                    hedefUret();
+                }
+            }, 600);
+        }
+
+        function tekHedefOlustur(secilenTip) {
+            if (!oyunAktif) return;
+
+            const alan = document.getElementById('oyunAlani');
+            const hedefKutu = document.createElement('div');
+            hedefKutu.className = 'hedef-kutu ' + secilenTip.sinif;
+
+            if (secilenTip.tur === 'carpi') {
+                hedefKutu.textContent = '❌';
+            } else {
+                const img = document.createElement('img');
+                img.src = secilenTip.resim;
+                img.draggable = false;
+                hedefKutu.appendChild(img);
+            }
+
+            // Kutunun oyun alanından taşmaması için güvenli koordinat hesabı
+            const genislik = alan.clientWidth || 750;
+            const yukseklik = alan.clientHeight || 600;
+            const maxX = Math.max(20, genislik - 90);
+            const maxY = Math.max(20, yukseklik - 90);
+
+            hedefKutu.style.left = Math.floor(Math.random() * maxX) + 'px';
+            hedefKutu.style.top = Math.floor(Math.random() * maxY) + 'px';
+
+            hedefKutu.onmousedown = function(e) {
+                if (!oyunAktif || hedefKutu.dataset.vuruldu === "true") return;
+                e.preventDefault();
+                hedefKutu.dataset.vuruldu = "true";
+
+                skor += secilenTip.puan;
+
+                if (secilenTip.tur === 'standart') vurusStandart++;
+                else if (secilenTip.tur === 'oguz') vurusOguz++;
+                else if (secilenTip.tur === 'efsanevi') vurusEfsanevi++;
+                else if (secilenTip.tur === 'carpi') vurusCarpi++;
+
+                bilgiyiGuncelle();
+
+                hedefKutu.style.animation = 'none';
+                hedefKutu.style.transform = 'scale(0)';
+                hedefKutu.style.opacity = '0';
+                setTimeout(() => {
+                    if (hedefKutu.parentElement) hedefKutu.remove();
+                }, 150);
+            };
+
+            alan.appendChild(hedefKutu);
+
+            setTimeout(() => {
+                if (hedefKutu.parentElement && hedefKutu.dataset.vuruldu !== "true") {
+                    hedefKutu.style.opacity = '0';
+                    setTimeout(() => {
+                        if (hedefKutu.parentElement) hedefKutu.remove();
+                    }, 150);
+                }
+            }, secilenTip.ekrandaKalma);
         }
 
         function hedefUret() {
             if (!oyunAktif) return;
 
-            const sans = Math.random() * 100;
-            let tipObjesi;
-            // Çıkma Olasılıkları
-            if (sans < 55) tipObjesi = hedefTipleri[0]; // %55 Normal
-            else if (sans < 75) tipObjesi = hedefTipleri[1]; // %20 Oğuz
-            else if (sans < 85) tipObjesi = hedefTipleri[2]; // %10 Efsanevi
-            else tipObjesi = hedefTipleri[3]; // %15 Çarpı (Hata)
+            try {
+                // Ayak Seçimi (%70 Standart, %20 Oğuz, %10 Efsanevi)
+                const sans = Math.random() * 100;
+                let ayakTipi;
+                if (sans < 70) ayakTipi = ayakTipleri[0];
+                else if (sans < 90) ayakTipi = ayakTipleri[1];
+                else ayakTipi = ayakTipleri[2];
 
-            let hedef;
-            if (tipObjesi.tip === 'img') {
-                hedef = document.createElement('img');
-                hedef.src = tipObjesi.resim;
-                hedef.draggable = false;
-            } else {
-                hedef = document.createElement('div');
-                hedef.innerHTML = tipObjesi.resim;
-            }
-            
-            hedef.className = 'hedef-ortak ' + tipObjesi.sinif;
-            
-            const alan = document.getElementById('oyunAlani');
-            const maxX = alan.clientWidth - 70; // 60px hitbox + 10px margin
-            const maxY = alan.clientHeight - 70;
-            hedef.style.left = Math.max(0, Math.floor(Math.random() * maxX)) + 'px';
-            hedef.style.top = Math.max(0, Math.floor(Math.random() * maxY)) + 'px';
+                // Her döngüde kesinlikle 1 ayak çıkar (oyun sonlarında ayak çıkmama sorununu engeller)
+                tekHedefOlustur(ayakTipi);
 
-            hedef.onmousedown = function(e) {
-                if (!oyunAktif) return;
-                e.preventDefault(); 
-                
-                skor += tipObjesi.puan;
-                
-                // İstatistikleri kaydet
-                if (tipObjesi.puan === 1) vurusStandart++;
-                else if (tipObjesi.puan === 3) vurusOguz++;
-                else if (tipObjesi.puan === 10) vurusEfsanevi++;
-                else if (tipObjesi.puan === -2) vurusCarpi++;
-
-                bilgiyiGuncelle();
-                
-                hedef.style.transform = 'scale(0)';
-                hedef.style.opacity = '0';
-                setTimeout(() => hedef.remove(), 200);
-            };
-
-            alan.appendChild(hedef);
-
-            setTimeout(() => {
-                if (hedef.parentElement) {
-                    hedef.style.opacity = '0';
-                    setTimeout(() => hedef.remove(), 200);
+                // %15 ihtimalle ek olarak yanıltıcı Çarpı (❌) çıkar
+                if (Math.random() * 100 < 15) {
+                    tekHedefOlustur(ayakTipleri[3]);
                 }
-            }, tipObjesi.ekrandaKalma);
+            } catch (err) {
+                console.error("Hedef üretim hatası:", err);
+            }
         }
 
         function bilgiyiGuncelle() {
-            document.getElementById('oyunBilgi').innerHTML = `⏱️ Süre: <span style="color:#ffeb3b">${kalanSure}s</span> &nbsp;|&nbsp; 🎯 Skor: <span style="color:${skor >= 0 ? '#00e676' : '#ff4c4c'}">${skor}</span>`;
+            document.getElementById('oyunBilgi').innerHTML = `⏱️ Süre: <span style="color:#ffeb3b">${kalanSure}s</span> &nbsp;|&nbsp; 🎯 Skor: <span style="color:#00e676">${skor}</span>`;
         }
 
-        window.oyunuBitir = function(ad) { 
-            // Firebase içine yazılı
-        };
+        window.oyunuBitir = function(ad) {};
     </script>
 
     <!-- Ortak Veritabanı (Firebase) Scripti -->
@@ -413,23 +475,27 @@
 
             document.getElementById('oyunAlani').style.display = 'none';
             document.getElementById('oyunAlani').innerHTML = ''; 
-            document.getElementById('oyunuBaslatBtn').style.display = 'block';
-            document.getElementById('oyunuBaslatBtn').innerText = "Tekrar Oyna 🔄";
+            
+            const btn = document.getElementById('oyunuBaslatBtn');
+            btn.style.display = 'inline-block'; // Butonun sola kaymasını engeller, ortada tutar
+            btn.innerText = "Tekrar Oyna 🔄";
+            
             document.getElementById('oyuncuAdi').disabled = false;
             document.getElementById('oyunBilgi').innerHTML = `Süre Bitti! <br><span style="color:#ffeb3b; font-size: 24px;">Toplam Skorun: ${skor}</span>`;
 
-            // Skor 0'dan büyükse VEYA eksi skorsa bile kaydedelim (istersen şartı değiştirebilirsin)
-            push(skorlarRef, { 
-                ad: ad, 
-                skor: skor, 
-                tarih: new Date().toLocaleDateString('tr-TR'),
-                vuruslar: {
-                    standart: vurusStandart,
-                    oguz: vurusOguz,
-                    efsanevi: vurusEfsanevi,
-                    carpi: vurusCarpi
-                }
-            });
+            if (skor > 0 || vurusStandart > 0 || vurusOguz > 0 || vurusEfsanevi > 0) {
+                push(skorlarRef, { 
+                    ad: ad, 
+                    skor: skor, 
+                    tarih: new Date().toLocaleDateString('tr-TR'),
+                    vuruslar: {
+                        standart: vurusStandart,
+                        oguz: vurusOguz,
+                        efsanevi: vurusEfsanevi,
+                        carpi: vurusCarpi
+                    }
+                });
+            }
         };
 
         onValue(skorlarRef, (snapshot) => {
@@ -441,18 +507,18 @@
                 skorDizisi.sort((a, b) => b.skor - a.skor);
                 skorDizisi.slice(0, 10).forEach((item, index) => {
                     let madalya = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ``;
-                    
                     let unvan = index === 0 ? `<span style="color: #ffeb3b; font-size: 12px; margin-left: 8px; text-shadow: 0 0 5px #ffeb3b; border: 1px solid #ffeb3b; padding: 2px 5px; border-radius: 5px;">👑 Ayak Yalama Üstadı</span>` : ``;
 
                     let vurusHTML = "";
                     if (item.vuruslar) {
+                        const carpiSayisi = item.vuruslar.carpi || 0;
                         vurusHTML = `
                             <div class="info-icon">ⓘ
                                 <div class="tooltip">
                                     <span class="t-std">Standart Ayak:</span> ${item.vuruslar.standart || 0}x<br>
                                     <span class="t-ogz">Oğuz'un Ayağı:</span> ${item.vuruslar.oguz || 0}x<br>
                                     <span class="t-efs">Efsanevi Ayak:</span> ${item.vuruslar.efsanevi || 0}x<br>
-                                    <span class="t-crp">Çarpı (Hata):</span> ${item.vuruslar.carpi || 0}x
+                                    <span class="t-crp">❌ Çarpı (Ceza):</span> ${carpiSayisi}x
                                 </div>
                             </div>
                         `;
@@ -463,11 +529,11 @@
                     const div = document.createElement('div');
                     div.className = 'skor-satir';
                     div.innerHTML = `
-                        <div style="display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center; flex-wrap: wrap;">
                             <span class="skor-derece" style="margin-right: 5px;">#${index+1}</span> 
                             ${madalya} ${item.ad} ${unvan} ${vurusHTML}
                         </div>
-                        <span class="skor-puan" style="color:${item.skor < 0 ? '#ff4c4c' : '#00e676'}">${item.skor} PTS</span>
+                        <span class="skor-puan">${item.skor} PTS</span>
                     `;
                     tabloDiv.appendChild(div);
                 });
