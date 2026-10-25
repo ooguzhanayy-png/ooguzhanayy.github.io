@@ -201,6 +201,77 @@
             margin-bottom: 15px;
         }
 
+        /* 📝 TEST BÖLÜMÜ CSS KODLARI 📝 */
+        .test-ana-kutu {
+            display: none;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            color: white;
+            max-width: 750px;
+            margin: 30px auto;
+            text-align: left;
+            border: 2px solid #0f3460;
+        }
+        .test-uyari-kutusu {
+            background: rgba(255, 235, 59, 0.12);
+            border: 2px solid #ffeb3b;
+            color: #ffeb3b;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 235, 59, 0.2);
+        }
+        .soru-karti {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(67, 221, 230, 0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .soru-baslik {
+            font-size: 17px;
+            font-weight: bold;
+            color: #43dde6;
+            margin: 0 0 12px 0;
+            line-height: 1.4;
+        }
+        .sik-label {
+            display: block;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            font-size: 15px;
+            color: #eee;
+        }
+        .sik-label:hover {
+            background: rgba(233, 69, 96, 0.25);
+            border-color: #e94560;
+        }
+        .sik-label input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #e94560;
+            transform: scale(1.2);
+        }
+        .test-sonuc-kutusu {
+            display: none;
+            background: rgba(0, 230, 118, 0.1);
+            border: 2px solid #00e676;
+            border-radius: 12px;
+            padding: 25px 20px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
         /* 🐾 SAĞ ALT EASTER EGG (KEDİ PATİSİ) CSS 🐾 */
         .pati-easter-egg {
             position: fixed;
@@ -392,6 +463,58 @@
         </div>
     </div>
 
+    <!-- 🧪 NE KADAR KÜRTSÜN TESTİ BÖLÜMÜ 🧪 -->
+    <hr style="margin-top: 50px; width: 60%; border: 0; border-top: 1px solid #ccc;">
+
+    <div id="testAcilirBaslik" class="oyun-acilir-baslik" style="background-color: #e94560;" onclick="testDetayGoster()">🧪 Ne Kadar Kürtsün Testini Göster</div>
+
+    <!-- Test Başlamadan Önceki Uyarı Kutusu -->
+    <div id="testOnayAlani" class="oyun-detay">
+        <p class="oyun-uyari-text" style="color: #856404; line-height: 1.5;">
+            ⚠️ DİKKAT:<br>
+            Hiçbir ırka veyahut gruba hakaret ya da aşağılama amacı güdülmemektedir. KÜRTLER DE KARDEŞİMİZDİR. Mizahtan öteye gidemeyecek bir testtir.
+        </p>
+        <button onclick="testiAktifEt()" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;">Okudum, Testi Başlat</button>
+    </div>
+
+    <!-- Test Ana Alanı -->
+    <div id="testAnaAlani" class="test-ana-kutu">
+        <h3 style="margin-top: 0; color: #e94560; text-align: center; text-transform: uppercase; font-size: 26px; text-shadow: 0 0 10px rgba(233,69,96,0.6);">
+            🧪 Ne Kadar Kürtsün Testi 🧪
+        </h3>
+
+        <!-- Test Üstü Sabit Uyarı İbaresi -->
+        <div class="test-uyari-kutusu">
+            ⚠️ Hiçbir ırka veyahut gruba hakaret ya da aşağılama amacı güdülmemektedir. KÜRTLER DE KARDEŞİMİZDİR. Mizahtan öteye gidemeyecek bir testtir.
+        </div>
+
+        <!-- Soruların Otomatik Yükleneceği Alan -->
+        <div id="testSorularListesi"></div>
+
+        <!-- Sonuç Gösterme Butonu -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="neon-btn" onclick="testiHesapla()" style="width: 80%; max-width: 350px; padding: 12px; background: #00e676; color: #000; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 17px; text-transform: uppercase;">
+                📊 Testi Bitir ve Analiz Et
+            </button>
+        </div>
+
+        <!-- Analiz Sonuç Ekranı -->
+        <div id="testSonucAlani" class="test-sonuc-kutusu">
+            <h4 id="sonucPuanBaslik" style="margin: 0 0 10px 0; color: #ffeb3b; font-size: 24px;"></h4>
+            <p id="sonucYuzdeText" style="font-weight: bold; color: #43dde6; font-size: 20px; margin-bottom: 15px;"></p>
+            <p id="sonucAciklamaText" style="font-size: 16px; line-height: 1.6; color: #fff; margin-bottom: 20px;"></p>
+            
+            <!-- Test Bitimi Uyarı İbaresi -->
+            <div class="test-uyari-kutusu" style="margin-bottom: 15px;">
+                ⚠️ Hiçbir ırka veyahut gruba hakaret ya da aşağılama amacı güdülmemektedir. KÜRTLER DE KARDEŞİMİZDİR. Mizahtan öteye gidemeyecek bir testtir.
+            </div>
+
+            <button onclick="testiSifirla()" style="padding: 10px 24px; background: #e94560; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px;">
+                🔄 Testi Tekrar Çöz
+            </button>
+        </div>
+    </div>
+
     <!-- 🐾 SAĞ ALT MİNİK KEDİ PATİSİ EASTER EGG 🐾 -->
     <div class="pati-easter-egg" onclick="patiModalAc()" title="Gizli Pati">🐾</div>
 
@@ -433,7 +556,7 @@
     </div>
 
 
-    <!-- Oyun ve Easter Egg Mantığı -->
+    <!-- Oyun, Test ve Easter Egg Mantığı -->
     <script>
         // --- EASTER EGG (KEDİ PATİSİ) FONKSİYONLARI ---
         function patiModalAc() {
@@ -464,10 +587,8 @@
             gizliBolum.style.display = 'none';
             document.getElementById('zenciFotoKutusu').style.display = 'none';
 
-            // İstediğin tam metin (Parlayıp sönen class ile)
             hayirYazi.textContent = "Seni küçük Nig*a sayfamdan si*tir git";
 
-            // Yazı çıktıktan 5 saniye sonra çarpı/açma tuşu belirir
             setTimeout(() => {
                 gizliBolum.style.display = 'block';
             }, 5000);
@@ -475,6 +596,187 @@
 
         function zenciFotoGoster() {
             document.getElementById('zenciFotoKutusu').style.display = 'block';
+        }
+
+        // --- TEST MANTIĞI VE SORULAR ---
+        const testSorulari = [
+            {
+                soru: "Soru-1) Kuzeninle evlenir misin?",
+                siklar: [
+                    { metin: "A) Evet", puan: 3 },
+                    { metin: "B) Hayır", puan: 0 },
+                    { metin: "C) S*ktir git eSMA bebek mi doğsun", puan: -1 }
+                ]
+            },
+            {
+                soru: "Soru-2) Ahmet Rock dinler misin?",
+                siklar: [
+                    { metin: "A) Evet severek", puan: 3 },
+                    { metin: "B) Bazen", puan: 1 },
+                    { metin: "C) Hayır", puan: 0 },
+                    { metin: "D) Yılmaz G*ne* de izleyelim istersen?", puan: -1 }
+                ]
+            },
+            {
+                soru: "Soru-3) E***k s*ktin mi?",
+                siklar: [
+                    { metin: "A) Evet", puan: 5 },
+                    { metin: "B) Hayır", puan: 0 },
+                    { metin: "C) Sol elim neyime yetmiyor", puan: 1 },
+                    { metin: "D) Sarı torba s*kmek varken mi?", puan: -1 }
+                ]
+            },
+            {
+                soru: "Soru-4) Trabzonspor ve Bursasporu severim.",
+                siklar: [
+                    { metin: "A) Evet", puan: -1 },
+                    { metin: "B) Nötrüm", puan: 1 },
+                    { metin: "C) Hayır", puan: 3 },
+                    { metin: "D) Nefret ederim", puan: 5 }
+                ]
+            },
+            {
+                soru: "Soru-5) \"Doktor Kürt kadının derdini dinlemiş. 'Hanımefendi perdenin arkasına gidin, soyunun' deyince kadın demiş ki, 'Doktor Bey, ilk sen soyun'.\" Bu olay size hangi seçeneği seçtiriyor?",
+                siklar: [
+                    { metin: "A) Rahmi Koç ayıp etmiştir.", puan: 0 },
+                    { metin: "B) PUAHAHAHAHAHAHA", puan: -1 },
+                    { metin: "C) Ne diyun la gewşek", puan: 1 },
+                    { metin: "D) Rahmi ilk önce kendi karısına sahip çıksın", puan: 3 }
+                ]
+            },
+            {
+                soru: "Soru-6) 01 Adana dizisi bence güzeldir.",
+                siklar: [
+                    { metin: "A) Evet", puan: 3 },
+                    { metin: "B) Hayır", puan: 0 },
+                    { metin: "C) Sokağa s*çılmış çocukların amw", puan: -1 }
+                ]
+            },
+            {
+                soru: "Soru-7) Messi mi Ronaldo mu?",
+                siklar: [
+                    { metin: "A) Messi", puan: -1 },
+                    { metin: "B) Ronaldo", puan: 2 },
+                    { metin: "C) Dia S*ba", puan: 10 }
+                ]
+            },
+            {
+                soru: "Soru-8) Burada bir soru yok soru numarası güzel :)",
+                siklar: [
+                    { metin: "A) BJK", puan: 0 },
+                    { metin: "B) LİVERPOOL", puan: 0 }
+                ]
+            }
+        ];
+
+        const sonucAraliklari = [
+            {
+                min: -7,
+                max: -3,
+                oran: "Yüzde 0 Kürtsün",
+                yorum: "Helal olsun kardeşim sen kesin Se*en Ak*u da dinlemiyorsundur."
+            },
+            {
+                min: -2,
+                max: 1,
+                oran: "Yüzde 10 - 20 Kürtsün",
+                yorum: "Aman Memet abi fıytay mıytay da bir yanımızı yıytay. Yiğidim dikkatli ol, o Şebn*m Fer*h'ı da playlistinden derhal kaldır."
+            },
+            {
+                min: 2,
+                max: 10,
+                oran: "Yüzde 20 - 30 Kürtsün",
+                yorum: "Ne tam anarşist ne tam namus bekçisi. Duruma göre şekil alan, cebinde 50 lirayla iddaa bayisinde takılan zararsız ama çok da güvenilmeyecek tipsin, e***k s*kmenden şüpheleniyorum."
+            },
+            {
+                min: 11,
+                max: 21,
+                oran: "Yüzde 30 - 45 Kürtsün",
+                yorum: "GBT kaydın var senin kesin de yine de bir şey demicem A*medi tutmuyorsan cansın ama yine de kuzenini s*kme."
+            },
+            {
+                min: 22,
+                max: 32,
+                oran: "Yüzde 100 Kürtsün",
+                yorum: "O***bu evladı sen kesin Kürt sorunu var, A*o'ya özgürlük falan da diyorsundur. Sarı torba seni s*ktir git p*ç oğlu. (Kürt olman değil de p*klı olman sorun o***bu evladı seni)"
+            }
+        ];
+
+        function testDetayGoster() {
+            const onayAlani = document.getElementById('testOnayAlani');
+            onayAlani.style.display = (onayAlani.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function testiAktifEt() {
+            document.getElementById('testOnayAlani').style.display = 'none';
+            document.getElementById('testAcilirBaslik').style.display = 'none';
+            document.getElementById('testAnaAlani').style.display = 'block';
+            sorulariEkranaBas();
+        }
+
+        function sorulariEkranaBas() {
+            const kapsayici = document.getElementById('testSorularListesi');
+            if (kapsayici.innerHTML.trim() !== "") return;
+
+            testSorulari.forEach((item, sIndex) => {
+                const kart = document.createElement('div');
+                kart.className = 'soru-karti';
+
+                let siklarHTML = '';
+                item.siklar.forEach((sik) => {
+                    siklarHTML += `
+                        <label class="sik-label">
+                            <input type="radio" name="soru_${sIndex}" value="${sik.puan}">
+                            ${sik.metin}
+                        </label>
+                    `;
+                });
+
+                kart.innerHTML = `
+                    <p class="soru-baslik">${item.soru}</p>
+                    ${siklarHTML}
+                `;
+                kapsayici.appendChild(kart);
+            });
+        }
+
+        function testiHesapla() {
+            let toplamPuan = 0;
+            let bosSoruVar = false;
+
+            testSorulari.forEach((_, sIndex) => {
+                const secili = document.querySelector(`input[name="soru_${sIndex}"]:checked`);
+                if (!secili) {
+                    bosSoruVar = true;
+                } else {
+                    toplamPuan += parseInt(secili.value, 10);
+                }
+            });
+
+            if (bosSoruVar) {
+                alert("Lütfen analiz için tüm soruları cevapla!");
+                return;
+            }
+
+            let bulunanSonuc = sonucAraliklari.find(a => toplamPuan >= a.min && toplamPuan <= a.max);
+            if (!bulunanSonuc) {
+                bulunanSonuc = toplamPuan < -7 ? sonucAraliklari[0] : sonucAraliklari[sonucAraliklari.length - 1];
+            }
+
+            document.getElementById('sonucPuanBaslik').textContent = `Toplam Puanın: ${toplamPuan}`;
+            document.getElementById('sonucYuzdeText').textContent = `Sonuç: ${bulunanSonuc.oran}`;
+            document.getElementById('sonucAciklamaText').textContent = bulunanSonuc.yorum;
+
+            const sonucDiv = document.getElementById('testSonucAlani');
+            sonucDiv.style.display = 'block';
+            sonucDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function testiSifirla() {
+            const radyolar = document.querySelectorAll('#testSorularListesi input[type="radio"]');
+            radyolar.forEach(r => r.checked = false);
+            document.getElementById('testSonucAlani').style.display = 'none';
+            document.getElementById('testAnaAlani').scrollIntoView({ behavior: 'smooth' });
         }
 
         // --- OYUN AÇILIR KUTU VE OYUN MANTIĞI ---
